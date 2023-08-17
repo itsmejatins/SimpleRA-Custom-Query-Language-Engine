@@ -1,11 +1,8 @@
-LOAD Student
-LOAD Marks
-cross_sm <- CROSS Student Marks
-Res1 <- SELECT Student_Stud_Id == Marks_Stud_Id FROM cross_sm
-cond1 <- SELECT Maths_marks >= 70 FROM Res1
-cond2 <- SELECT Physics_marks > 60 FROM cond1
-cond3 <- SELECT Stud_age >= 16 FROM cond2
-cond4 <- SELECT Stud_age <= 18 FROM cond3
-AnsC <- PROJECT Student_Stud_Id, Maths_marks, Physics_marks, Stud_age FROM cond4
-PRINT AnsC
-
+cross_sm_D <- CROSS Student Marks
+Res1D <- SELECT Student_Stud_Id == Marks_Stud_Id FROM cross_sm_D
+cond1D <- SELECT Maths_marks >= 70 FROM Res1D
+cond2D <- SELECT Physics_marks > 60 FROM cond1D
+cond3D <- SELECT Stud_age >= 16 FROM cond2D
+cond4D <- SELECT Stud_age <= 18 FROM cond3D
+AnsD <- PROJECT Student_Stud_Id, Maths_marks, Physics_marks, Stud_age FROM cond4D
+PRINT AnsD

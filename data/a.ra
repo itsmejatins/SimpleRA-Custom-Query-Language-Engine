@@ -1,4 +1,6 @@
 LOAD Student
+LOAD Marks
+LOAD Advisor
 ProblemA <- SELECT Stud_sex == 0 FROM Student
 AnsA <- PROJECT Stud_Id,Stud_age FROM ProblemA
 EXPORT AnsA

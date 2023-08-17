@@ -1,12 +1,8 @@
-LOAD Student
-LOAD Marks
-LOAD Advisor
-cross_sm <- CROSS Student Marks
-cross_all <- CROSS cross_sm Advisor
-filter1 <- SELECT Student_Stud_Id == Marks_Stud_Id FROM cross_all
-filter2 <- SELECT Advisor_id == Adv_Id FROM filter1
-cond11 <- SELECT Adv_Id == 2 FROM filter2
-cond22 <- SELECT Maths_marks > 90 FROM cond11
-AnsHH <- PROJECT Student_Stud_Id FROM cond22 
-PRINT AnsHH
-
+cross_sm_H <- CROSS Student Marks
+cross_all_H <- CROSS cross_sm_H Advisor
+filter1H <- SELECT Student_Stud_Id == Marks_Stud_Id FROM cross_all_H
+filter2H <- SELECT Advisor_id == Adv_Id FROM filter1H
+cond1H <- SELECT Adv_Id == 2 FROM filter2H
+cond2H <- SELECT Maths_marks > 90 FROM cond1H
+AnsH <- PROJECT Student_Stud_Id FROM cond2H 
+PRINT AnsH
