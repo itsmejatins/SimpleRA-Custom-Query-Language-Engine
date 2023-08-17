@@ -1,5 +1,5 @@
-LOAD a
-LOAD b
-PRINT b
-PRINT a
-LIST TABLES
+LOAD Student
+ProblemA <- SELECT Stud_sex == 0 FROM Student
+AnsA <- PROJECT Stud_Id,Stud_age FROM ProblemA
+EXPORT AnsA
+PRINT AnsA

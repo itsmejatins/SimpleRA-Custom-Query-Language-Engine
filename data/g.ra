@@ -1,0 +1,8 @@
+LOAD Student 
+LOAD Advisor
+cross_sa <- CROSS Student Advisor
+filter1 <- SELECT Advisor_id == Adv_Id FROM cross_sa
+cond1 <- SELECT Adv_age > 40 FROM filter1
+AnsG <- PROJECT Stud_Id,Adv_Id FROM cond1
+PRINT AnsG
+
