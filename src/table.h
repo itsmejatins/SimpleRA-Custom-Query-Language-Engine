@@ -24,12 +24,12 @@ public:
     string sourceFileName = "";
     string tableName = "";
     vector<string> columns;
-    vector<uint> distinctValuesPerColumnCount;
-    uint columnCount = 0;
+    vector<unsigned int> distinctValuesPerColumnCount;
+    unsigned int columnCount = 0;
     long long int rowCount = 0;
-    uint blockCount = 0;
-    uint maxRowsPerBlock = 0;
-    vector<uint> rowsPerBlockCount;
+    unsigned int blockCount = 0;
+    unsigned int maxRowsPerBlock = 0;
+    vector<unsigned int> rowsPerBlockCount;
     bool indexed = false;
     string indexedColumn = "";
     IndexingStrategy indexingStrategy = NOTHING;

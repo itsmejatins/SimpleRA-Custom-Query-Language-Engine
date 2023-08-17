@@ -38,7 +38,7 @@ Table::Table(string tableName, vector<string> columns)
     this->tableName = tableName;
     this->columns = columns;
     this->columnCount = columns.size();
-    this->maxRowsPerBlock = (uint)((BLOCK_SIZE * 1000) / (sizeof(int) * columnCount));
+    this->maxRowsPerBlock = (unsigned int)((BLOCK_SIZE * 1000) / (sizeof(int) * columnCount));
     this->writeRow<string>(columns);
 }
 
@@ -90,7 +90,7 @@ bool Table::extractColumnNames(string firstLine)
         this->columns.emplace_back(word);
     }
     this->columnCount = this->columns.size();
-    this->maxRowsPerBlock = (uint)((BLOCK_SIZE * 1000) / (sizeof(int) * this->columnCount));
+    this->maxRowsPerBlock = (unsigned int)((BLOCK_SIZE * 1000) / (sizeof(int) * this->columnCount));
     return true;
 }
 
@@ -220,7 +220,7 @@ void Table::renameColumn(string fromColumnName, string toColumnName)
 void Table::print()
 {
     logger.log("Table::print");
-    uint count = min((long long)PRINT_COUNT, this->rowCount);
+    unsigned int count = min((long long)PRINT_COUNT, this->rowCount);
 
     //print headings
     this->writeRow(this->columns, cout);
