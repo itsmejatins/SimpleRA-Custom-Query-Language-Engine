@@ -33,14 +33,14 @@ Page::Page(string tableName, int pageIndex)
     this->pageName = "../data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
     Table table = *tableCatalogue.getTable(tableName);
     this->columnCount = table.columnCount;
-    uint maxRowCount = table.maxRowsPerBlock;
+    unsigned int maxRowCount = table.maxRowsPerBlock;
     vector<int> row(columnCount, 0);
     this->rows.assign(maxRowCount, row);
 
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pageIndex];
     int number;
-    for (uint rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
+    for (unsigned int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
     {
         for (int columnCounter = 0; columnCounter < columnCount; columnCounter++)
         {

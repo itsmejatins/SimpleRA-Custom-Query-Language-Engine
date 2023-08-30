@@ -1,4 +1,5 @@
 #include"logger.h"
+#include <vector>
 /**
  * @brief The Page object is the main memory representation of a physical page
  * (equivalent to a block). The page class and the page.h header file are at the

@@ -1,4 +1,5 @@
 #include"page.h"
+#include <deque>
 
 /**
  * @brief The BufferManager is responsible for reading pages to the main memory.
