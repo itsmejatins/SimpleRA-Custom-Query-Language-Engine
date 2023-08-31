@@ -17,5 +17,12 @@ void executeSELECTION();
 void executeSORT();
 void executeSOURCE();
 
+// for matrix
+void executeCLEARMATRIX();
+void executeLOADMATRIX();
+void executePRINTMATRIX();
+void executeRENAMEMATRIX();
+void executeEXPORTMATRIX();
+
 bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 void printRowCount(int rowCount);

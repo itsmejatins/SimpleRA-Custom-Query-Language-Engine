@@ -17,7 +17,6 @@ public:
     void deleteMatrix(string matrixName);
     Matrix* getMatrix(string matrixName);
     bool isMatrix(string matrixName);
-    bool isColumnFromMatrix(string columnName, string matrixName);
     void print();
     ~MatrixCatalogue();
 };

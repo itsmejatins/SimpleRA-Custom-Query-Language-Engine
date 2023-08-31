@@ -9,11 +9,11 @@ class Cursor{
     public:
     Page page;
     int pageIndex;
-    string tableName;
+    string relationName;
     int pagePointer;
 
     public:
-    Cursor(string tableName, int pageIndex);
-    vector<int> getNext();
+    Cursor(string relationName, int pageIndex);
+    vector<int> getNext(string relationType);
     void nextPage(int pageIndex);
 };

@@ -1,11 +1,11 @@
 #include "global.h"
 
-Cursor::Cursor(string tableName, int pageIndex)
+Cursor::Cursor(string relationName, int pageIndex)
 {
     logger.log("Cursor::Cursor");
-    this->page = bufferManager.getPage(tableName, pageIndex);
+    this->page = bufferManager.getPage(relationName, pageIndex);
     this->pagePointer = 0;
-    this->tableName = tableName;
+    this->relationName = relationName;
     this->pageIndex = pageIndex;
 }
 
@@ -16,16 +16,27 @@ Cursor::Cursor(string tableName, int pageIndex)
  *
  * @return vector<int> 
  */
-vector<int> Cursor::getNext()
+vector<int> Cursor::getNext(string relationType)
 {
     logger.log("Cursor::geNext");
     vector<int> result = this->page.getRow(this->pagePointer);
     this->pagePointer++;
-    if(result.empty()){
-        tableCatalogue.getTable(this->tableName)->getNextPage(this);
-        if(!this->pagePointer){
-            result = this->page.getRow(this->pagePointer);
-            this->pagePointer++;
+    if(relationType == "table"){
+        if(result.empty()){
+            tableCatalogue.getTable(this->relationName)->getNextPage(this);
+            if(!this->pagePointer){
+                result = this->page.getRow(this->pagePointer);
+                this->pagePointer++;
+            }
+        }
+    }
+    else if(relationType == "matrix"){
+        if(result.empty()){
+            matrixCatalogue.getMatrix(this->relationName)->getNextPage(this);
+            if(!this->pagePointer){
+                result = this->page.getRow(this->pagePointer);
+                this->pagePointer++;
+            }
         }
     }
     return result;
@@ -39,7 +50,7 @@ vector<int> Cursor::getNext()
 void Cursor::nextPage(int pageIndex)
 {
     logger.log("Cursor::nextPage");
-    this->page = bufferManager.getPage(this->tableName, pageIndex);
+    this->page = bufferManager.getPage(this->relationName, pageIndex);
     this->pageIndex = pageIndex;
     this->pagePointer = 0;
 }

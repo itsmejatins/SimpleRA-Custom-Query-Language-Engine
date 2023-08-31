@@ -229,7 +229,7 @@ void Table::print()
     vector<int> row;
     for (int rowCounter = 0; rowCounter < count; rowCounter++)
     {
-        row = cursor.getNext();
+        row = cursor.getNext("table");
         this->writeRow(row, cout);
     }
     printRowCount(this->rowCount);
@@ -276,7 +276,7 @@ void Table::makePermanent()
     vector<int> row;
     for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
     {
-        row = cursor.getNext();
+        row = cursor.getNext("table");
         this->writeRow(row, fout);
     }
     fout.close();

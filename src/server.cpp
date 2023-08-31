@@ -10,6 +10,7 @@ Logger logger;
 vector<string> tokenizedQuery;
 ParsedQuery parsedQuery;
 TableCatalogue tableCatalogue;
+MatrixCatalogue matrixCatalogue;
 BufferManager bufferManager;
 
 void doCommand()
@@ -17,10 +18,9 @@ void doCommand()
     logger.log("doCommand");
     if (syntacticParse() && semanticParse())
         executeCommand();
-    return;
 }
 
-int main(void)
+int main()
 {
 
     regex delim("[^\\s,]+");

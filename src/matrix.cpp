@@ -1,5 +1,6 @@
 #include "global.h"
 
+
 /**
  * @brief Construct a new Matrix:: Matrix object
  *
@@ -8,6 +9,7 @@ Matrix::Matrix()
 {
     logger.log("Matrix::Matrix");
 }
+
 
 /**
  * @brief Construct a new Matrix:: Matrix object used in the case where the data
@@ -23,24 +25,6 @@ Matrix::Matrix(string matrixName)
     this->matrixName = matrixName;
 }
 
-/**
- * @brief Construct a new Matrix:: Matrix object used when an assignment command
- * is encountered. To create the matrix object both the matrix name and the
- * columns the matrix holds should be specified.
- *
- * @param matrixName
- * @param columns
- */
-Matrix::Matrix(string matrixName, vector<string> columns)
-{
-    logger.log("Matrix::Matrix");
-    this->sourceFileName = "../data/temp/" + matrixName + ".csv";
-    this->matrixName = matrixName;
-    this->columns = columns;
-    this->columnCount = columns.size();
-    this->maxRowsPerBlock = (unsigned int)((BLOCK_SIZE * 1000) / (sizeof(int) * columnCount));
-    this->writeRow<string>(columns);
-}
 
 /**
  * @brief The load function is used when the LOAD command is encountered. It
@@ -57,42 +41,31 @@ bool Matrix::load()
     string line;
     if (getline(fin, line))
     {
+        unordered_set<string> columnValues;
+        string word;
+        stringstream s(line);
+
+        while (getline(s, word, ','))
+        {
+            word.erase(std::remove_if(word.begin(), word.end(), ::isspace), word.end());
+            columnValues.insert(word);
+            this->columns.emplace_back(word);
+        }
+
+        this->columnCount = this->columns.size();
+        this->maxRowsPerBlock = (unsigned int)((BLOCK_SIZE * 1000) / (sizeof(int) * this->columnCount));
+
         fin.close();
-        if (this->extractColumnNames(line))
-            if (this->blockify())
-                return true;
+
+        if (this->blockify())
+            return true;
+
     }
+
     fin.close();
     return false;
 }
 
-/**
- * @brief Function extracts column names from the header line of the .csv data
- * file.
- *
- * @param line
- * @return true if column names successfully extracted (i.e. no column name
- * repeats)
- * @return false otherwise
- */
-bool Matrix::extractColumnNames(string firstLine)
-{
-    logger.log("Matrix::extractColumnNames");
-    unordered_set<string> columnNames;
-    string word;
-    stringstream s(firstLine);
-    while (getline(s, word, ','))
-    {
-        word.erase(std::remove_if(word.begin(), word.end(), ::isspace), word.end());
-        if (columnNames.count(word))
-            return false;
-        columnNames.insert(word);
-        this->columns.emplace_back(word);
-    }
-    this->columnCount = this->columns.size();
-    this->maxRowsPerBlock = (unsigned int)((BLOCK_SIZE * 1000) / (sizeof(int) * this->columnCount));
-    return true;
-}
 
 /**
  * @brief This function splits all the rows and stores them in multiple files of
@@ -113,7 +86,6 @@ bool Matrix::blockify()
     dummy.clear();
     this->distinctValuesInColumns.assign(this->columnCount, dummy);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
-    getline(fin, line);
     while (getline(fin, line))
     {
         stringstream s(line);
@@ -148,6 +120,7 @@ bool Matrix::blockify()
     return true;
 }
 
+
 /**
  * @brief Given a row of values, this function will update the statistics it
  * stores i.e. it updates the number of rows that are present in the column and
@@ -169,47 +142,20 @@ void Matrix::updateStatistics(vector<int> row)
     }
 }
 
-/**
- * @brief Checks if the given column is present in this matrix.
- *
- * @param columnName
- * @return true
- * @return false
- */
-bool Matrix::isColumn(string columnName)
-{
-    logger.log("Matrix::isColumn");
-    for (auto col : this->columns)
-    {
-        if (col == columnName)
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
 /**
- * @brief Renames the column indicated by fromColumnName to toColumnName. It is
- * assumed that checks such as the existence of fromColumnName and the non prior
- * existence of toColumnName are done.
+ * @brief Renames the matrix indicated by fromMatrixName to toMatrixName. It is
+ * assumed that checks such as the existence of fromMatrixName and the non prior
+ * existence of toMatrixName are done.
  *
- * @param fromColumnName
- * @param toColumnName
+ * @param fromMatrixName
+ * @param toMatrixName
  */
-void Matrix::renameColumn(string fromColumnName, string toColumnName)
+void Matrix::renameMatrix(string fromMatrixName, string toMatrixName)
 {
-    logger.log("Matrix::renameColumn");
-    for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++)
-    {
-        if (columns[columnCounter] == fromColumnName)
-        {
-            columns[columnCounter] = toColumnName;
-            break;
-        }
-    }
     return;
 }
+
 
 /**
  * @brief Function prints the first few rows of the matrix. If the matrix contains
@@ -223,18 +169,17 @@ void Matrix::print()
     unsigned int count = min((long long)PRINT_COUNT, this->rowCount);
 
     //print headings
-    this->writeRow(this->columns, cout);
+    // this->writeRow(this->columns, cout);
 
     Cursor cursor(this->matrixName, 0);
     vector<int> row;
     for (int rowCounter = 0; rowCounter < count; rowCounter++)
     {
-        row = cursor.getNext();
+        row = cursor.getNext("matrix");
         this->writeRow(row, cout);
     }
     printRowCount(this->rowCount);
 }
-
 
 
 /**
@@ -255,7 +200,6 @@ void Matrix::getNextPage(Cursor *cursor)
 }
 
 
-
 /**
  * @brief called when EXPORT command is invoked to move source file to "data"
  * folder.
@@ -270,17 +214,18 @@ void Matrix::makePermanent()
     ofstream fout(newSourceFile, ios::out);
 
     //print headings
-    this->writeRow(this->columns, fout);
+    // this->writeRow(this->columns, fout);
 
     Cursor cursor(this->matrixName, 0);
     vector<int> row;
     for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
     {
-        row = cursor.getNext();
+        row = cursor.getNext("matrix");
         this->writeRow(row, fout);
     }
     fout.close();
 }
+
 
 /**
  * @brief Function to check if matrix is already exported
@@ -295,6 +240,7 @@ bool Matrix::isPermanent()
         return true;
     return false;
 }
+
 
 /**
  * @brief The unload function removes the matrix from the database by deleting
@@ -320,19 +266,3 @@ Cursor Matrix::getCursor()
     Cursor cursor(this->matrixName, 0);
     return cursor;
 }
-/**
- * @brief Function that returns the index of column indicated by columnName
- *
- * @param columnName
- * @return int
- */
-int Matrix::getColumnIndex(string columnName)
-{
-    logger.log("Matrix::getColumnIndex");
-    for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++)
-    {
-        if (this->columns[columnCounter] == columnName)
-            return columnCounter;
-    }
-}
-

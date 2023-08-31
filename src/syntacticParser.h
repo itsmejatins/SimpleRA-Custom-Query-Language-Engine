@@ -19,7 +19,14 @@ enum QueryType
     SELECTION,
     SORT,
     SOURCE,
-    UNDETERMINED
+    UNDETERMINED,
+
+    // for matrix
+    CLEARMATRIX,
+    LOADMATRIX,
+    PRINTMATRIX,
+    RENAMEMATRIX,
+    EXPORTMATRIX
 };
 
 enum BinaryOperator
@@ -87,6 +94,10 @@ public:
     string renameToColumnName = "";
     string renameRelationName = "";
 
+    // for matrix
+    string renameFromMatrixName = "";
+    string renameToMatrixName = "";
+
     SelectType selectType = NO_SELECT_CLAUSE;
     BinaryOperator selectionBinaryOperator = NO_BINOP_CLAUSE;
     string selectionResultRelationName = "";
@@ -122,5 +133,12 @@ bool syntacticParseSELECTION();
 bool syntacticParseSORT();
 bool syntacticParseSOURCE();
 
-bool isFileExists(string tableName);
-bool isQueryFile(string fileName);
+// for matrix
+bool syntacticParseCLEARMATRIX();
+bool syntacticParseLOADMATRIX();
+bool syntacticParsePRINTMATRIX();
+bool syntacticParseEXPORTMATRIX();
+bool syntacticParseRENAMEMATRIX();
+
+bool isFileExists(string relationName);
+bool isQueryFile(string relationName);

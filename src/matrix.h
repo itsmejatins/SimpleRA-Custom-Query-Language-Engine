@@ -1,4 +1,3 @@
-#include "cursor.h"
 
 enum MatrixIndexingStrategy
 {
@@ -33,15 +32,13 @@ public:
     string indexedColumn = "";
     MatrixIndexingStrategy matrixIndexingStrategy = MATRIX_NOTHING;
 
-    bool extractColumnNames(string firstLine);
     bool blockify();
     void updateStatistics(vector<int> row);
     Matrix();
     Matrix(string matrixName);
     Matrix(string matrixName, vector<string> columns);
     bool load();
-    bool isColumn(string columnName);
-    void renameColumn(string fromColumnName, string toColumnName);
+    void renameMatrix(string fromMatrixName, string toMatrixName);
     void print();
     void makePermanent();
     bool isPermanent();

@@ -16,3 +16,10 @@ bool semanticParseRENAME();
 bool semanticParseSELECTION();
 bool semanticParseSORT();
 bool semanticParseSOURCE();
+
+// for matrix
+bool semanticParseCLEARMATRIX();
+bool semanticParseLOADMATRIX();
+bool semanticParsePRINTMATRIX();
+bool semanticParseEXPORTMATRIX();
+bool semanticParseRENAMEMATRIX();

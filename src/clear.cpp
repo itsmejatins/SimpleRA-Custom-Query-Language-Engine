@@ -2,7 +2,8 @@
 
 /**
  * @brief 
- * SYNTAX: CLEAR <relation_name> 
+ * SYNTAX: CLEAR <relation_name>
+ * SYNTAX: CLEAR MATRIX <relation_name>
  */
 
 bool syntacticParseCLEAR()
@@ -18,6 +19,19 @@ bool syntacticParseCLEAR()
     return true;
 }
 
+bool syntacticParseCLEARMATRIX()
+{
+    logger.log("syntacticParseCLEARMATRIX");
+    if (tokenizedQuery.size() != 3)
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+    parsedQuery.queryType = CLEARMATRIX;
+    parsedQuery.clearRelationName = tokenizedQuery[2];
+    return true;
+}
+
 bool semanticParseCLEAR()
 {
     logger.log("semanticParseCLEAR");
@@ -28,10 +42,26 @@ bool semanticParseCLEAR()
     return false;
 }
 
+bool semanticParseCLEARMATRIX()
+{
+    logger.log("semanticParseCLEARMATRIX");
+    //Matrix should exist
+    if (matrixCatalogue.isMatrix(parsedQuery.clearRelationName))
+        return true;
+    cout << "SEMANTIC ERROR: No such matrix exists" << endl;
+    return false;
+}
+
 void executeCLEAR()
 {
     logger.log("executeCLEAR");
     //Deleting table from the catalogue deletes all temporary files
     tableCatalogue.deleteTable(parsedQuery.clearRelationName);
-    return;
+}
+
+void executeCLEARMATRIX()
+{
+    logger.log("executeCLEARMATRIX");
+    //Deleting matrix from the catalogue deletes all temporary files
+    matrixCatalogue.deleteMatrix(parsedQuery.clearRelationName);
 }
