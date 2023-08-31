@@ -43,5 +43,4 @@ void executeLOAD()
         tableCatalogue.insertTable(table);
         cout << "Loaded Table. Column Count: " << table->columnCount << " Row Count: " << table->rowCount << endl;
     }
-    return;
 }
