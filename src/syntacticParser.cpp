@@ -4,6 +4,26 @@ bool syntacticParse()
 {
     logger.log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
+    string possibleSubQueryType = tokenizedQuery[1];
+
+    // for matrix
+    if(possibleSubQueryType == "MATRIX")
+    {
+        if (possibleQueryType == "CLEAR")
+            return syntacticParseCLEARMATRIX();
+
+        else if (possibleQueryType == "LOAD")
+            return syntacticParseLOADMATRIX();
+
+        else if (possibleQueryType == "PRINT")
+            return syntacticParsePRINTMATRIX();
+
+        else if (possibleQueryType == "EXPORT")
+            return syntacticParseEXPORTMATRIX();
+
+        else if (possibleQueryType == "RENAME")
+            return syntacticParseRENAMEMATRIX();
+    }
 
     if (tokenizedQuery.size() < 2)
     {
@@ -54,7 +74,6 @@ bool syntacticParse()
             return false;
         }
     }
-    return false;
 }
 
 ParsedQuery::ParsedQuery()
@@ -120,13 +139,13 @@ void ParsedQuery::clear()
  * @brief Checks to see if source file exists. Called when LOAD command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param relationName
+ * @return true
+ * @return false
  */
-bool isFileExists(string tableName)
+bool isFileExists(string relationName)
 {
-    string fileName = "../data/" + tableName + ".csv";
+    string fileName = "../data/" + relationName + ".csv";
     struct stat buffer;
     return (stat(fileName.c_str(), &buffer) == 0);
 }
@@ -135,12 +154,12 @@ bool isFileExists(string tableName)
  * @brief Checks to see if source file exists. Called when SOURCE command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param relationName
+ * @return true
+ * @return false
  */
-bool isQueryFile(string fileName){
-    fileName = "../data/" + fileName + ".ra";
+bool isQueryFile(string relationName){
+    relationName = "../data/" + relationName + ".ra";
     struct stat buffer;
-    return (stat(fileName.c_str(), &buffer) == 0);
+    return (stat(relationName.c_str(), &buffer) == 0);
 }

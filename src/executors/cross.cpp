@@ -78,7 +78,7 @@ void executeCROSS()
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();
 
-    vector<int> row1 = cursor1.getNext();
+    vector<int> row1 = cursor1.getNext("table");
     vector<int> row2;
     vector<int> resultantRow;
     resultantRow.reserve(resultantTable->columnCount);
@@ -87,15 +87,15 @@ void executeCROSS()
     {
 
         cursor2 = table2.getCursor();
-        row2 = cursor2.getNext();
+        row2 = cursor2.getNext("table");
         while (!row2.empty())
         {
             resultantRow = row1;
             resultantRow.insert(resultantRow.end(), row2.begin(), row2.end());
             resultantTable->writeRow<int>(resultantRow);
-            row2 = cursor2.getNext();
+            row2 = cursor2.getNext("table");
         }
-        row1 = cursor1.getNext();
+        row1 = cursor1.getNext("table");
     }
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);

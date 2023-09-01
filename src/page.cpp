@@ -6,7 +6,7 @@
 Page::Page()
 {
     this->pageName = "";
-    this->tableName = "";
+    this->relationName = "";
     this->pageIndex = -1;
     this->rowCount = 0;
     this->columnCount = 0;
@@ -22,23 +22,36 @@ Page::Page()
  * loads the rows (or tuples) into a vector of rows (where each row is a vector
  * of integers).
  *
- * @param tableName 
- * @param pageIndex 
+ * @param relationName
+ * @param pageIndex
  */
-Page::Page(string tableName, int pageIndex)
+Page::Page(string relationName, int pageIndex)
 {
     logger.log("Page::Page");
-    this->tableName = tableName;
+    this->relationName = relationName;
     this->pageIndex = pageIndex;
-    this->pageName = "../data/temp/" + this->tableName + "_Page" + to_string(pageIndex);
-    Table table = *tableCatalogue.getTable(tableName);
-    this->columnCount = table.columnCount;
-    unsigned int maxRowCount = table.maxRowsPerBlock;
+    this->pageName = "../data/temp/" + this->relationName + "_Page" + to_string(pageIndex);
+    unsigned int maxRowCount;
+    if(tableCatalogue.getTable(relationName) != nullptr)
+    {
+        Table table = *tableCatalogue.getTable(relationName);
+        this->columnCount = table.columnCount;
+        this->rowCount = table.rowsPerBlockCount[pageIndex];
+        maxRowCount = table.maxRowsPerBlock;
+    }
+    else
+    {
+        Matrix matrix = *matrixCatalogue.getMatrix(relationName);
+        this->columnCount = matrix.columnCount;
+        this->rowCount = matrix.rowsPerBlockCount[pageIndex];
+        maxRowCount = matrix.maxRowsPerBlock;
+    }
+
     vector<int> row(columnCount, 0);
     this->rows.assign(maxRowCount, row);
 
     ifstream fin(pageName, ios::in);
-    this->rowCount = table.rowsPerBlockCount[pageIndex];
+
     int number;
     for (unsigned int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
     {
@@ -53,9 +66,9 @@ Page::Page(string tableName, int pageIndex)
 
 /**
  * @brief Get row from page indexed by rowIndex
- * 
- * @param rowIndex 
- * @return vector<int> 
+ *
+ * @param rowIndex
+ * @return vector<int>
  */
 vector<int> Page::getRow(int rowIndex)
 {
@@ -67,20 +80,20 @@ vector<int> Page::getRow(int rowIndex)
     return this->rows[rowIndex];
 }
 
-Page::Page(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount)
+Page::Page(string relationName, int pageIndex, vector<vector<int>> rows, int rowCount)
 {
     logger.log("Page::Page");
-    this->tableName = tableName;
+    this->relationName = relationName;
     this->pageIndex = pageIndex;
     this->rows = rows;
     this->rowCount = rowCount;
     this->columnCount = rows[0].size();
-    this->pageName = "../data/temp/"+this->tableName + "_Page" + to_string(pageIndex);
+    this->pageName = "../data/temp/" + this->relationName + "_Page" + to_string(pageIndex);
 }
 
 /**
  * @brief writes current page contents to file.
- * 
+ *
  */
 void Page::writePage()
 {

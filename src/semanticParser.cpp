@@ -17,6 +17,14 @@ bool semanticParse(){
         case SELECTION: return semanticParseSELECTION();
         case SORT: return semanticParseSORT();
         case SOURCE: return semanticParseSOURCE();
+
+            // for matrix
+        case CLEARMATRIX: return semanticParseCLEARMATRIX();
+        case LOADMATRIX: return semanticParseLOADMATRIX();
+        case PRINTMATRIX: return semanticParsePRINTMATRIX();
+        case RENAMEMATRIX: return semanticParseRENAMEMATRIX();
+        case EXPORTMATRIX: return semanticParseEXPORTMATRIX();
+
         default: cout<<"SEMANTIC ERROR"<<endl;
     }
 

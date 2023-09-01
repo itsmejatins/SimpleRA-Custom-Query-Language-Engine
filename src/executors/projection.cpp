@@ -1,6 +1,6 @@
 #include "global.h"
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- PROJECT column_name1, ... FROM relation_name
  */
 bool syntacticParsePROJECTION()
@@ -58,7 +58,7 @@ void executePROJECTION()
     {
         columnIndices.emplace_back(table.getColumnIndex(parsedQuery.projectionColumnList[columnCounter]));
     }
-    vector<int> row = cursor.getNext();
+    vector<int> row = cursor.getNext("table");
     vector<int> resultantRow(columnIndices.size(), 0);
 
     while (!row.empty())
@@ -69,7 +69,7 @@ void executePROJECTION()
             resultantRow[columnCounter] = row[columnIndices[columnCounter]];
         }
         resultantTable->writeRow<int>(resultantRow);
-        row = cursor.getNext();
+        row = cursor.getNext("table");
     }
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);

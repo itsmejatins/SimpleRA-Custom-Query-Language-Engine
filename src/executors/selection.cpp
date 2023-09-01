@@ -1,8 +1,7 @@
 #include "global.h"
 #include <regex>
-
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- SELECT column_name bin_op [column_name | int_literal] FROM relation_name
  */
 bool syntacticParseSELECTION()
@@ -88,20 +87,20 @@ bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator)
 {
     switch (binaryOperator)
     {
-    case LESS_THAN:
-        return (value1 < value2);
-    case GREATER_THAN:
-        return (value1 > value2);
-    case LEQ:
-        return (value1 <= value2);
-    case GEQ:
-        return (value1 >= value2);
-    case EQUAL:
-        return (value1 == value2);
-    case NOT_EQUAL:
-        return (value1 != value2);
-    default:
-        return false;
+        case LESS_THAN:
+            return (value1 < value2);
+        case GREATER_THAN:
+            return (value1 > value2);
+        case LEQ:
+            return (value1 <= value2);
+        case GEQ:
+            return (value1 >= value2);
+        case EQUAL:
+            return (value1 == value2);
+        case NOT_EQUAL:
+            return (value1 != value2);
+        default:
+            return false;
     }
 }
 
@@ -112,7 +111,7 @@ void executeSELECTION()
     Table table = *tableCatalogue.getTable(parsedQuery.selectionRelationName);
     Table* resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
     Cursor cursor = table.getCursor();
-    vector<int> row = cursor.getNext();
+    vector<int> row = cursor.getNext("table");
     int firstColumnIndex = table.getColumnIndex(parsedQuery.selectionFirstColumnName);
     int secondColumnIndex;
     if (parsedQuery.selectType == COLUMN)
@@ -128,7 +127,7 @@ void executeSELECTION()
             value2 = row[secondColumnIndex];
         if (evaluateBinOp(value1, value2, parsedQuery.selectionBinaryOperator))
             resultantTable->writeRow<int>(row);
-        row = cursor.getNext();
+        row = cursor.getNext("table");
     }
     if(resultantTable->blockify())
         tableCatalogue.insertTable(resultantTable);
