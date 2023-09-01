@@ -36,6 +36,7 @@ public:
     void updateStatistics(vector<int> row);
     Matrix();
     Matrix(string matrixName);
+    Matrix(string fromMatrixName, string toMatrixName);
     Matrix(string matrixName, vector<string> columns);
     bool load();
     void renameMatrix(string fromMatrixName, string toMatrixName);

@@ -86,6 +86,21 @@ void executeRENAME()
 void executeRENAMEMATRIX()
 {
     logger.log("executeRENAMEMATRIX");
-    Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.renameRelationName);
-    matrix->renameMatrix(parsedQuery.renameFromMatrixName, parsedQuery.renameToMatrixName);
+
+    // delete old matrix
+    matrixCatalogue.deleteMatrix(parsedQuery.renameFromMatrixName);
+
+    // create new matrix
+    Matrix *matrix = new Matrix(parsedQuery.renameFromMatrixName, parsedQuery.renameToMatrixName);
+
+    if (matrix->load())
+    {
+        if(matrix->columnCount != matrix->rowCount)
+        {
+            cout << "It's not a square matrix!";
+            return;
+        }
+
+        matrixCatalogue.insertMatrix(matrix);
+    }
 }

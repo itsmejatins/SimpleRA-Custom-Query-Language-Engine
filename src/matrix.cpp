@@ -27,6 +27,22 @@ Matrix::Matrix(string matrixName)
 
 
 /**
+ * @brief Construct a new Matrix:: Matrix object used in the case where the data
+ * file is available and LOAD MATRIX command has been called. This command should be
+ * followed by calling the load matrix function;
+ *
+ * @param fromMatrixName
+ * @param toMatrixName
+ */
+Matrix::Matrix(string fromMatrixName, string toMatrixName)
+{
+    logger.log("Matrix::Matrix");
+    this->sourceFileName = "../data/" + fromMatrixName + ".csv";
+    this->matrixName = toMatrixName;
+}
+
+
+/**
  * @brief The load function is used when the LOAD command is encountered. It
  * reads data from the source file, splits it into blocks and updates matrix
  * statistics.
