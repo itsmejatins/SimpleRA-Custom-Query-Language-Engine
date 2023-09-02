@@ -18,7 +18,7 @@ Cursor::Cursor(string relationName, int pageIndex)
  */
 vector<int> Cursor::getNext(string relationType)
 {
-    logger.log("Cursor::geNext");
+    logger.log("Cursor::getNext");
     vector<int> result = this->page.getRow(this->pagePointer);
     this->pagePointer++;
     if(relationType == "table"){

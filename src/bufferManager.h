@@ -36,4 +36,6 @@ public:
     void deleteFile(string relationName, int pageIndex);
     void deleteFile(string fileName);
     void writePage(string relationName, int pageIndex, vector<vector<int>> rows, int rowCount);
+
+    void clearPool();
 };

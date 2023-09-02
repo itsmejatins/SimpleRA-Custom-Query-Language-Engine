@@ -25,6 +25,8 @@ void executeCommand(){
         case RENAMEMATRIX: executeRENAMEMATRIX(); break;
         case EXPORTMATRIX: executeEXPORTMATRIX(); break;
 
+        case TRANSPOSEMATRIX : executeTRANSPOSEMATRIX(); break;
+
         default: cout<<"PARSING ERROR"<<endl;
     }
 }

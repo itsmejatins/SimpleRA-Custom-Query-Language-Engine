@@ -16,11 +16,11 @@ class Page{
     string relationName;
     string pageIndex;
     int columnCount;
-    int rowCount;
-    vector<vector<int>> rows;
+    
 
 public:
-
+    int rowCount;
+    vector<vector<int>> rows;
     string pageName = "";
     Page();
     Page(string relationName, int pageIndex);

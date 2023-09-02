@@ -78,7 +78,7 @@ void executeLOAD()
 
 void executeLOADMATRIX()
 {
-    logger.log("executeLOAD");
+    logger.log("executeLOADMATRIX");
 
     Matrix *matrix = new Matrix(parsedQuery.loadRelationName);
 

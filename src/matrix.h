@@ -61,6 +61,8 @@ public:
     int getColumnIndex(string columnName);
     void unload();
 
+    void transposeMatrix();
+
     /**
  * @brief Static function that takes a vector of valued and prints them out in a
  * comma seperated format.

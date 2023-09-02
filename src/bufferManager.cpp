@@ -119,3 +119,7 @@ void BufferManager::deleteFile(string relationName, int pageIndex)
     string fileName = "../data/temp/" + relationName + "_Page" + to_string(pageIndex);
     this->deleteFile(fileName);
 }
+
+void BufferManager::clearPool(){
+    this->pages.clear();
+}

@@ -26,7 +26,10 @@ enum QueryType
     LOADMATRIX,
     PRINTMATRIX,
     RENAMEMATRIX,
-    EXPORTMATRIX
+    EXPORTMATRIX,
+
+    TRANSPOSEMATRIX
+
 };
 
 enum BinaryOperator
@@ -83,6 +86,7 @@ public:
     string joinSecondColumnName = "";
 
     string loadRelationName = "";
+    string transposeRelationName = "";
 
     string printRelationName = "";
 
@@ -139,6 +143,9 @@ bool syntacticParseLOADMATRIX();
 bool syntacticParsePRINTMATRIX();
 bool syntacticParseEXPORTMATRIX();
 bool syntacticParseRENAMEMATRIX();
+
+//transpose matrix
+bool syntacticParseTRANSPOSEMATRIX();
 
 bool isFileExists(string relationName);
 bool isQueryFile(string relationName);

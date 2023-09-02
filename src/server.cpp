@@ -20,6 +20,10 @@ void doCommand()
         executeCommand();
 }
 
+void debug(int n){
+    cout<<"debug " << n << endl;
+}
+
 int main()
 {
 
@@ -52,13 +56,12 @@ int main()
         {
             continue;
         }
-
+        
         if (tokenizedQuery.size() == 1)
         {
             cout << "SYNTAX ERROR" << endl;
             continue;
         }
-
         doCommand();
     }
 }
