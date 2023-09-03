@@ -231,7 +231,7 @@ void Matrix::getNextPage(Cursor *cursor)
 void Matrix::makePermanent()
 {
     logger.log("Matrix::makePermanent");
-    if(!this->isPermanent() && this->sourceFileName == "../data/" + this->matrixName + ".csv")
+    if(!this->isPermanent())
         bufferManager.deleteFile(this->sourceFileName);
     string newSourceFile = "../data/" + this->matrixName + ".csv";
     ofstream fout(newSourceFile, ios::out);
@@ -247,10 +247,7 @@ void Matrix::makePermanent()
         this->writeRow(row, fout);
     }
     fout.close();
-
-    this->sourceFileName = "../data/" + this->matrixName + ".csv";
 }
-
 /**
  * @brief Function to check if matrix is already exported
  *

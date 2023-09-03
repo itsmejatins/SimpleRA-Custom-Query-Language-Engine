@@ -87,11 +87,25 @@ void executeRENAMEMATRIX()
 {
     logger.log("executeRENAMEMATRIX");
 
+    // create new csv
+    Matrix oldMatrix = *matrixCatalogue.getMatrix(parsedQuery.renameFromMatrixName);
+    string newSourceFile = "../data/" + parsedQuery.renameToMatrixName + ".csv";
+    ofstream fout(newSourceFile, ios::out);
+
+    Cursor cursor(oldMatrix.matrixName, 0);
+    vector<int> row;
+    for (int rowCounter = 0; rowCounter < oldMatrix.rowCount; rowCounter++)
+    {
+        row = cursor.getNext("matrix");
+        oldMatrix.writeRow(row, fout);
+    }
+    fout.close();
+
     // delete old matrix
     matrixCatalogue.deleteMatrix(parsedQuery.renameFromMatrixName);
 
     // create new matrix
-    Matrix *matrix = new Matrix(parsedQuery.renameFromMatrixName, parsedQuery.renameToMatrixName);
+    Matrix *matrix = new Matrix(parsedQuery.renameToMatrixName);
 
     if (matrix->load())
     {

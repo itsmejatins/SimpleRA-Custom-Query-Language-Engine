@@ -27,7 +27,10 @@ bool syntacticParse()
         else if(possibleQueryType == "TRANSPOSE")
             return syntacticParseTRANSPOSEMATRIX();
         else
+        {
+            cout << "SYNTAX ERROR" << endl;
             return false;
+        }
     }
 
     if (tokenizedQuery.size() < 2)
