@@ -16,11 +16,6 @@ bool syntacticParseCOMPUTEMATRIX()
 bool semanticParseCOMPUTEMATRIX()
 {
     logger.log("semanticParseCOMPUTEMATRIX");
-    // if (matrixCatalogue.isMatrix(parsedQuery.transposeRelationName))
-    // {
-    //     cout << "SEMANTIC ERROR: Relation already exists" << endl;
-    //     return false;
-    // }
 
     if (!isFileExists(parsedQuery.computeRelationName))
     {

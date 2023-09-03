@@ -24,8 +24,10 @@ bool syntacticParse()
         else if (possibleQueryType == "RENAME")
             return syntacticParseRENAMEMATRIX();
 
-        else if(possibleQueryType == "TRANSPOSE");
+        else if(possibleQueryType == "TRANSPOSE")
             return syntacticParseTRANSPOSEMATRIX();
+        else
+            return false;
     }
 
     if (tokenizedQuery.size() < 2)

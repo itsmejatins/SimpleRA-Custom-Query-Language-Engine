@@ -78,13 +78,15 @@ We will use the same logic which is used to export tables. By reading each page 
 <br/>
 
 #### **2e. RENAME MATRIX** <br/>
-We have created new functions in rename.cpp . These functions check the syntax, semantic and prints the matrix by reading all the pages. 
+- We have created new functions in rename.cpp . These functions check the syntax, semantic and prints the matrix by reading all the pages. 
 
-Syntax checks - The commands should have 4 words. RENAME, MATRIX, from matrix name & to matrix name. Otherwise it will throw a syntax error. 
+- Syntax checks - The commands should have 4 words. RENAME, MATRIX, from matrix name & to matrix name. Otherwise it will throw a syntax error. 
 
-Semantic checks - We are checking if the matrix is already loaded. If not, it throws a semantic error. We also check for the other matrix name, if that is already loaded. Again it will throw an error if that is loaded too.
+- Semantic checks - We are checking if the matrix is already loaded. If not, it throws a semantic error. We also check for the other matrix name, if that is already loaded. Again it will throw an error if that is loaded too.
 
-We are creating new pages with the new name matrix and loading the matrix from the previous source. To be more memory efficient, we are removing the pages of previous name matrix. And the source of matrix doesn't change as we do not want multiple csv files on every RENAME.
+- We are creating new pages with the new name matrix and loading the matrix from the previous source. To be more memory efficient, we are removing the pages of previous name matrix. And the source of matrix doesn't change as we do not want multiple csv files on every RENAME.
+
+- A function is added in syntacticParse.cpp which check that at any given location a file exists or not. This was done because after renaming the funciton, the name of the matrix in memory is different from the name of its original csv file. To check whether the matrix is loaded in the main memory before not, we first check if its original file is present or not. If the origial file is absent, we check if the first page of the renamed matrix is present in temp folder or not. If the page is present, the semantic check is passed, else false is returned.
 
 <br/>
 
@@ -110,12 +112,26 @@ In symmetry we are extracting i-th row and i-th column and then checking whether
 <br/>
 
 #### **2g. COMPUTE** <br/>
+- For computing A -A', in the executor folder, matrixCompute.cpp file has been created. It has three functions each for checking syntax, semantics and executing the compute function respectively.
+- Logic for syntax checking is very similar to other commands. The enum variable responsible for identifying the query as compute query 'COMPUTEMATRIX' has been added in the ParsedQueryClass.
+- Inside the ParsedQuery class, the variable computeRelationName stores the name of the matrix upon which compute is being done.
+
+**Algorithm** for computing is as follows - 
+- The matrix for which A- A' is to be done is loaded in the memory.
+- A copy of the original file (if necessary) of this matrix is created as backup. Now all the changes which have been done to this matrix are exported. This updates the original file of the matrix using the temporary pages that were once created while loading the matrix.
+- Now we create copy of this updated matrix and the name of the copied file is A_RESULT assuming the original file is A.csv.
+- From inside the compute() method, a matrix is loaded. Its name is assigned as A_RESULT. Doing this we have already blockified A_RESULT.csv and its blocks are stored in temp folder. Also we have a matrix called A_RESULT in matrixCatalogue.
+- Now we transpose A_RESULT thereby updating the pages of A_RESULT.
+- After transposing, we delete the A_RESULT.csv file and A.csv file. The name of the backup file (if created) is changed to A.csv.
+- All the pages of A and A_RESULT are accessed one by one. These are stored in memory in two vectors v1 and v2. 
+- All the corresponding entries of v1 and v2 are subtracted and stored in v2 itself. The updated v2 is then overwritten to the corresponding page of A_RESULT.
+
 
 <br/>
 
 ### **3. Assumptions** <br/>
 - We are storing the elements of the matrix in a row wise manner in the block. Therefore to accomodate 1 row according to the given constraing( n=10^4 ) we need to have BLOCK_COUNT as 40.
-- We have assumned that the matrix will only contain integers and not floating point decimals or any long values.
+- We have assumed that the matrix will only contain integers and not floating point decimals or any long values.
 
 ### **4. Learnings** <br/>
 - Gained insight as to how to store matrix data in a block efficiently. Also got more expose as to how to store any type of data efficiently with respect to storing and retrieving.
