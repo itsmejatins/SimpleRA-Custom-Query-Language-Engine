@@ -14,11 +14,11 @@ Cursor::Cursor(string relationName, int pageIndex)
  * current row read from the page is indicated by the pagePointer(points to row
  * in page the cursor is pointing to).
  *
- * @return vector<int> 
+ * @return vector<int>
  */
 vector<int> Cursor::getNext(string relationType)
 {
-    logger.log("Cursor::geNext");
+    logger.log("Cursor::getNext");
     vector<int> result = this->page.getRow(this->pagePointer);
     this->pagePointer++;
     if(relationType == "table"){
@@ -45,7 +45,7 @@ vector<int> Cursor::getNext(string relationType)
  * @brief Function that loads Page indicated by pageIndex. Now the cursor starts
  * reading from the new page.
  *
- * @param pageIndex 
+ * @param pageIndex
  */
 void Cursor::nextPage(int pageIndex)
 {

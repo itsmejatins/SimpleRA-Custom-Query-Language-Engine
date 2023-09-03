@@ -26,7 +26,12 @@ enum QueryType
     LOADMATRIX,
     PRINTMATRIX,
     RENAMEMATRIX,
-    EXPORTMATRIX
+    EXPORTMATRIX,
+
+    TRANSPOSEMATRIX,
+    CHECKSYMMETRY,
+    COMPUTEMATRIX
+
 };
 
 enum BinaryOperator
@@ -83,6 +88,9 @@ public:
     string joinSecondColumnName = "";
 
     string loadRelationName = "";
+    string transposeRelationName = "";
+    string computeRelationName = "";
+    string checkSymmetryRelationName = "";
 
     string printRelationName = "";
 
@@ -140,5 +148,11 @@ bool syntacticParsePRINTMATRIX();
 bool syntacticParseEXPORTMATRIX();
 bool syntacticParseRENAMEMATRIX();
 
+//transpose matrix
+bool syntacticParseTRANSPOSEMATRIX();
+bool syntacticParseCOMPUTEMATRIX();
+bool syntacticParseCHECKSYMMETRY();
+
 bool isFileExists(string relationName);
+bool isFileExistsAnywhere(const std::string& filePath);
 bool isQueryFile(string relationName);

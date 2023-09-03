@@ -1,8 +1,8 @@
 # *****************************************************
 # Variables to control Makefile operation
 
-CXX = g++
-CXXFLAGS = -g -I .
+CXX = g++ -std=c++14
+CXXFLAGS = -g -I . 
 
 SRC := $(wildcard *.cpp)
 OBJS = $(SRC:.cpp=.o)

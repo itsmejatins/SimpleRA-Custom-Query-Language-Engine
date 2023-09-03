@@ -1,3 +1,16 @@
+//
+// Created by System Administrator on 01/09/23.
+//
+
+#ifndef SRC_MATRIX_H
+#define SRC_MATRIX_H
+
+#include <vector>
+#include <unordered_set>
+#include <string>
+#include "cursor.h"
+
+using namespace std;
 
 enum MatrixIndexingStrategy
 {
@@ -16,7 +29,7 @@ enum MatrixIndexingStrategy
  */
 class Matrix
 {
-    vector<unordered_set<int>> distinctValuesInColumns;
+    vector<unordered_set<int> > distinctValuesInColumns;
 
 public:
     string sourceFileName = "";
@@ -47,6 +60,9 @@ public:
     Cursor getCursor();
     int getColumnIndex(string columnName);
     void unload();
+
+    void transposeMatrix();
+    bool checkSymmetry();
 
     /**
  * @brief Static function that takes a vector of valued and prints them out in a
@@ -83,4 +99,8 @@ public:
         this->writeRow(row, fout);
         fout.close();
     }
+
+    void computeMatrix();
 };
+
+#endif //SRC_MATRIX_H

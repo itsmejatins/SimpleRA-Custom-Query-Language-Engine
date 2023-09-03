@@ -1,4 +1,7 @@
 #include "cursor.h"
+#include <unordered_set>
+#include <vector>
+#include <string>
 
 enum IndexingStrategy
 {

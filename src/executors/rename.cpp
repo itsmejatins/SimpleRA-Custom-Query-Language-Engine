@@ -1,6 +1,6 @@
 #include "global.h"
 /**
- * @brief 
+ * @brief
  * SYNTAX: RENAME column_name TO column_name FROM relation_name
  * SYNTAX: RENAME MATRIX from_matrix_name to_matrix_name
  */
