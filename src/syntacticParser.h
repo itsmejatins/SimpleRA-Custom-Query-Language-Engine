@@ -154,4 +154,5 @@ bool syntacticParseCOMPUTEMATRIX();
 bool syntacticParseCHECKSYMMETRY();
 
 bool isFileExists(string relationName);
+bool isFileExistsAnywhere(const std::string& filePath);
 bool isQueryFile(string relationName);

@@ -157,6 +157,11 @@ bool isFileExists(string relationName)
     return (stat(fileName.c_str(), &buffer) == 0);
 }
 
+bool isFileExistsAnywhere(const std::string& filePath) {
+    std::ifstream file(filePath);
+    return file.good();
+}
+
 /**
  * @brief Checks to see if source file exists. Called when SOURCE command is
  * invoked.

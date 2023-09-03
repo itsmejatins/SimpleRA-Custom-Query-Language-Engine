@@ -24,6 +24,8 @@ bool semanticParseTRANSPOSEMATRIX()
 
     if (!isFileExists(parsedQuery.transposeRelationName))
     {
+        if(isFileExistsAnywhere("../data/temp/" + parsedQuery.transposeRelationName + "_Page0"))
+            return true;
         cout << "SEMANTIC ERROR: Data file doesn't exist" << endl;
         return false;
     }

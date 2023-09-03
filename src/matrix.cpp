@@ -542,9 +542,14 @@ void Matrix::computeMatrix()
     string srcPath = "../data/" + this->matrixName + ".csv";
     string desPath = "../data/" + this->matrixName + "_RESULT.csv";
 
-    createCopy(srcPath, "../data/" + this->matrixName + "_ORIG.csv");
-    nReads+=this->blockCount;
-    nWrites+=this->blockCount;
+    bool origFileExists = isFileExistsAnywhere(srcPath);
+
+    if(origFileExists)
+    {
+        createCopy(srcPath, "../data/" + this->matrixName + "_ORIG.csv");
+        nReads+=this->blockCount;
+        nWrites+=this->blockCount;
+    }
     this->makePermanent();
     nWrites += this->blockCount;
     createCopy(srcPath, desPath);
@@ -589,7 +594,8 @@ void Matrix::computeMatrix()
 
     deleteFile(desPath);
     deleteFile(srcPath);
-    renameFile("../data/" + this->matrixName + "_ORIG.csv", srcPath);
+    if(origFileExists)
+        renameFile("../data/" + this->matrixName + "_ORIG.csv", srcPath);
 
     for(int p = 0; p < this->blockCount; p++)
     {

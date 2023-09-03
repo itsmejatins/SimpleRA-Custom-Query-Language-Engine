@@ -23,6 +23,9 @@ bool semanticParseCHECKSYMMETRY()
     logger.log("semanticParseCHECKSYMMETRY");
     if (!isFileExists(parsedQuery.checkSymmetryRelationName))
     {
+        if(isFileExistsAnywhere("../data/temp/" + parsedQuery.checkSymmetryRelationName + "_Page0"))
+            return true;
+
         cout << "SEMANTIC ERROR: Data file doesn't exist" << endl;
         return false;
     }
