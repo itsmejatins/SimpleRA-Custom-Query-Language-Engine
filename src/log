@@ -2,129 +2,7 @@ BufferManager::BufferManager
 ParseQuery::clear
 
 Reading New Command: 
-LOAD MATRIX mat2
-doCommand
-syntacticParse
-syntacticParseLOADMATRIX
-semanticParse
-semanticParseLOADMATRIX
-MatrixCatalogue::isMatrix
-executeLOADMATRIX
-Matrix::Matrix
-Matrix::load
-Matrix::blockify
-BufferManager::writePage
-Page::Page
-Page::writePage
-BufferManager::writePage
-Page::Page
-Page::writePage
-MatrixCatalogue::~insertMatrix
-ParseQuery::clear
-
-Reading New Command: 
-TRANSPOSE MATRIX mat2
-doCommand
-syntacticParse
-syntacticParseTRANSPOSEMATRIX
-semanticParse
-semanticParseTRANSPOSEMATRIX
-executeTRANSPOSEMATRIX
-MatrixCatalogue::getMatrix
-ParseQuery::clear
-
-Reading New Command: 
-PRINT MATRIX mat2
-doCommand
-syntacticParse
-syntacticParsePRINTMATRIX
-semanticParse
-semanticParsePRINTMATRIX
-MatrixCatalogue::isMatrix
-executePRINTMATRIX
-MatrixCatalogue::getMatrix
-Matrix::print
-Cursor::Cursor
-BufferManager::getPage
-BufferManager::inPool
-BufferManager::insertIntoPool
-Page::Page
-TableCatalogue::getTable
-MatrixCatalogue::getMatrix
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-MatrixCatalogue::getMatrix
-Matrix::getNext
-Cursor::nextPage
-BufferManager::getPage
-BufferManager::inPool
-BufferManager::insertIntoPool
-Page::Page
-TableCatalogue::getTable
-MatrixCatalogue::getMatrix
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-Cursor::getNext
-Page::getRow
-Matrix::printRow
-ParseQuery::clear
-
-Reading New Command: 
-LOAD MATRIX mat1
+LOAD MATRIX M
 doCommand
 syntacticParse
 syntacticParseLOADMATRIX
@@ -169,7 +47,7 @@ MatrixCatalogue::~insertMatrix
 ParseQuery::clear
 
 Reading New Command: 
-TRANSPOSE MATRIX mat1
+TRANSPOSE MATRIX M
 doCommand
 syntacticParse
 syntacticParseTRANSPOSEMATRIX
@@ -180,7 +58,7 @@ MatrixCatalogue::getMatrix
 ParseQuery::clear
 
 Reading New Command: 
-PRINT MATRIX mat1
+PRINT MATRIX M
 doCommand
 syntacticParse
 syntacticParsePRINTMATRIX
@@ -287,6 +165,212 @@ Matrix::printRow
 Cursor::getNext
 Page::getRow
 Matrix::printRow
+ParseQuery::clear
+
+Reading New Command: 
+RENAME MATRIX M M2
+doCommand
+syntacticParse
+syntacticParseRENAMEMATRIX
+semanticParse
+semanticParseRENAMEMATRIX
+MatrixCatalogue::isMatrix
+MatrixCatalogue::isMatrix
+executeRENAMEMATRIX
+MatrixCatalogue::deleteMatrix
+Matrix::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Matrix::isPermanent
+Matrix::Matrix
+Matrix::load
+Matrix::blockify
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+BufferManager::writePage
+Page::Page
+Page::writePage
+MatrixCatalogue::~insertMatrix
+ParseQuery::clear
+
+Reading New Command: 
+PRINT MATRIX M2
+doCommand
+syntacticParse
+syntacticParsePRINTMATRIX
+semanticParse
+semanticParsePRINTMATRIX
+MatrixCatalogue::isMatrix
+executePRINTMATRIX
+MatrixCatalogue::getMatrix
+Matrix::print
+Cursor::Cursor
+BufferManager::getPage
+BufferManager::inPool
+BufferManager::insertIntoPool
+Page::Page
+TableCatalogue::getTable
+MatrixCatalogue::getMatrix
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+MatrixCatalogue::getMatrix
+Matrix::getNext
+Cursor::nextPage
+BufferManager::getPage
+BufferManager::inPool
+BufferManager::insertIntoPool
+Page::Page
+TableCatalogue::getTable
+MatrixCatalogue::getMatrix
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+MatrixCatalogue::getMatrix
+Matrix::getNext
+Cursor::nextPage
+BufferManager::getPage
+BufferManager::inPool
+BufferManager::insertIntoPool
+Page::Page
+TableCatalogue::getTable
+MatrixCatalogue::getMatrix
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+MatrixCatalogue::getMatrix
+Matrix::getNext
+Cursor::nextPage
+BufferManager::getPage
+BufferManager::inPool
+BufferManager::insertIntoPool
+Page::Page
+TableCatalogue::getTable
+MatrixCatalogue::getMatrix
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+Cursor::getNext
+Page::getRow
+Matrix::printRow
+ParseQuery::clear
+
+Reading New Command: 
+TRANSPOSE MATRIX M2
+doCommand
+syntacticParse
+syntacticParseTRANSPOSEMATRIX
+semanticParse
+semanticParseTRANSPOSEMATRIX
+ParseQuery::clear
+
+Reading New Command: 
+COMPUTE M2
+doCommand
+syntacticParse
+syntacticParseCOMPUTEMATRIX
+semanticParse
+semanticParseCOMPUTEMATRIX
+ParseQuery::clear
+
+Reading New Command: 
+CHECKSYMMETRY M2
+doCommand
+syntacticParse
+syntacticParseCHECKSYMMETRY
+semanticParse
+semanticParseCHECKSYMMETRY
 ParseQuery::clear
 
 Reading New Command: 

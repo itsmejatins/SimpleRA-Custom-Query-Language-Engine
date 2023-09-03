@@ -6,6 +6,9 @@
 #include <sstream>
 #include <chrono>
 #include <thread>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 
 /**
  * @brief Construct a new Matrix:: Matrix object
@@ -228,13 +231,13 @@ void Matrix::getNextPage(Cursor *cursor)
 void Matrix::makePermanent()
 {
     logger.log("Matrix::makePermanent");
-    if (!this->isPermanent())
+    if(!this->isPermanent() && this->sourceFileName == "../data/" + this->matrixName + ".csv")
         bufferManager.deleteFile(this->sourceFileName);
     string newSourceFile = "../data/" + this->matrixName + ".csv";
     ofstream fout(newSourceFile, ios::out);
 
-    // print headings
-    //  this->writeRow(this->columns, fout);
+    //print headings
+    // this->writeRow(this->columns, fout);
 
     Cursor cursor(this->matrixName, 0);
     vector<int> row;
@@ -244,6 +247,8 @@ void Matrix::makePermanent()
         this->writeRow(row, fout);
     }
     fout.close();
+
+    this->sourceFileName = "../data/" + this->matrixName + ".csv";
 }
 
 /**
@@ -482,6 +487,131 @@ bool Matrix::checkSymmetry()
 
     return symmetry;
 }
+
+// Function to create a copy of the file
+bool createCopy(const std::string& sourceFilePath, const std::string& destinationFilePath) {
+    // Open the source file for reading
+    std::ifstream sourceFile(sourceFilePath, std::ios::binary);
+
+    if (!sourceFile.is_open()) {
+        std::cerr << "Error: Unable to open the source file." << std::endl;
+        return false;
+    }
+
+    // Open the destination file for writing
+    std::ofstream destinationFile(destinationFilePath, std::ios::binary);
+
+    if (!destinationFile.is_open()) {
+        std::cerr << "Error: Unable to create the destination file." << std::endl;
+        return false;
+    }
+
+    // Copy the contents of the source file to the destination file
+    destinationFile << sourceFile.rdbuf();
+
+    // Close both files
+    sourceFile.close();
+    destinationFile.close();
+
+    return true;
+}
+
+bool deleteFile(const std::string& destinationFilePath) {
+    // Attempt to remove the destination file
+    if (std::remove(destinationFilePath.c_str()) != 0) {
+        std::cerr << "Error: Unable to delete the file." << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool renameFile(const std::string& currentFilePath, const std::string& newFilePath) {
+    // Attempt to rename the file
+    if (std::rename(currentFilePath.c_str(), newFilePath.c_str()) != 0) {
+        std::cerr << "Error: Unable to rename the file." << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+void Matrix::computeMatrix()
+{
+    int nReads = 0, nWrites = 0;
+    string srcPath = "../data/" + this->matrixName + ".csv";
+    string desPath = "../data/" + this->matrixName + "_RESULT.csv";
+
+    createCopy(srcPath, "../data/" + this->matrixName + "_ORIG.csv");
+    nReads+=this->blockCount;
+    nWrites+=this->blockCount;
+    this->makePermanent();
+    nWrites += this->blockCount;
+    createCopy(srcPath, desPath);
+    nReads+=this->blockCount;
+    nWrites+=this->blockCount;
+
+    Matrix *matrix = new Matrix(this->matrixName + "_RESULT");
+
+    if (matrix->load())
+    {
+        if(matrix->columnCount != matrix->rowCount)
+        {
+            cout << "It's not a square matrix!";
+            return;
+        }
+
+        matrixCatalogue.insertMatrix(matrix);
+
+        //////////////////////////////////////////////
+
+
+        string matrixName = matrix->matrixName;
+        int rows = matrix->rowCount;
+        int rowPage = 0;
+        int rowIndex = 0;
+        for (int i = 0; i < rows; i++)
+        {
+            rowPage = i / matrix->maxRowsPerBlock;
+            rowIndex = i % matrix->maxRowsPerBlock;
+            writeRowToTemporaryBlock(matrixName, rowPage, rowIndex, nReads, nWrites);
+            writeColToTemporaryBlock(matrixName, i, matrix->blockCount, nReads, nWrites);
+
+            updateRow(matrixName, rowPage, rowIndex, i, nReads, nWrites);
+            updateCol(matrixName, i, matrix->blockCount, matrix->maxRowsPerBlock, nReads, nWrites);
+        }
+        bufferManager.clearPool();
+
+        ///////////////////////////////////////////
+
+
+    }
+
+    deleteFile(desPath);
+    deleteFile(srcPath);
+    renameFile("../data/" + this->matrixName + "_ORIG.csv", srcPath);
+
+    for(int p = 0; p < this->blockCount; p++)
+    {
+        auto v1 = readPage(this->matrixName, p, nReads, nWrites);
+        auto v2 = readPage(this->matrixName+"_RESULT", p, nReads, nWrites);
+
+        for(int i = 0; i < v2.size(); i++)
+        {
+            for(int j = 0; j < v2.at(0).size(); j++)
+            {
+                v2[i][j] = v1[i][j] - v2[i][j];
+            }
+        }
+        updatePage(v2, this->matrixName + "_RESULT", p, nReads, nWrites);
+    }
+
+    cout << endl;
+    cout << "Number of blocks read: " << nReads << endl;
+    cout << "Number of blocks written: " << nWrites << endl;
+    cout << "Number of blocks accessed: " << nReads + nWrites << endl;
+}
+
 
 /**
  * @brief The unload function removes the matrix from the database by deleting

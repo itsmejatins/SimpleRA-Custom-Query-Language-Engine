@@ -18,16 +18,16 @@ void executeCommand(){
         case SORT: executeSORT(); break;
         case SOURCE: executeSOURCE(); break;
 
-        // for matrix
+            // for matrix
         case CLEARMATRIX: executeCLEARMATRIX(); break;
         case LOADMATRIX: executeLOADMATRIX(); break;
         case PRINTMATRIX: executePRINTMATRIX(); break;
         case RENAMEMATRIX: executeRENAMEMATRIX(); break;
         case EXPORTMATRIX: executeEXPORTMATRIX(); break;
 
+        case CHECKSYMMETRY : executeCHECKSYMMETRY(); break;
         case TRANSPOSEMATRIX : executeTRANSPOSEMATRIX(); break;
-        case CHECKSYMMETRY : executeCHECKSYMMETRY(); break; 
-
+         case COMPUTEMATRIX : executeCOMPUTEMATRIX(); break;
         default: cout<<"PARSING ERROR"<<endl;
     }
 }

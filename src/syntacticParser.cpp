@@ -50,6 +50,8 @@ bool syntacticParse()
         return syntacticParseEXPORT();
     else if(possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
+    else if(possibleQueryType == "COMPUTE")
+        return syntacticParseCOMPUTEMATRIX();
     else if( possibleQueryType == "CHECKSYMMETRY")
         return syntacticParseCHECKSYMMETRY();
     else

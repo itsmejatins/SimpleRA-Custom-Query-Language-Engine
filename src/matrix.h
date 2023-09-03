@@ -99,6 +99,8 @@ public:
         this->writeRow(row, fout);
         fout.close();
     }
+
+    void computeMatrix();
 };
 
 #endif //SRC_MATRIX_H

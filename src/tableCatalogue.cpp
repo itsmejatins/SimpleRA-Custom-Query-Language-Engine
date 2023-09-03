@@ -14,7 +14,9 @@ void TableCatalogue::deleteTable(string tableName)
 }
 Table* TableCatalogue::getTable(string tableName)
 {
-    logger.log("TableCatalogue::getTable"); 
+    logger.log("TableCatalogue::getTable");
+    if(this->tables.find(tableName) == this->tables.end())
+        return nullptr;
     Table *table = this->tables[tableName];
     return table;
 }
@@ -54,8 +56,11 @@ void TableCatalogue::print()
 
 TableCatalogue::~TableCatalogue(){
     logger.log("TableCatalogue::~TableCatalogue"); 
-    for(auto table: this->tables){
-        table.second->unload();
-        delete table.second;
+    if(!this->tables.empty())
+    {
+        for(auto table: this->tables){
+            table.second->unload();
+            delete table.second;
+        }
     }
 }

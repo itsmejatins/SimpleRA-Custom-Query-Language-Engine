@@ -49,8 +49,11 @@ void MatrixCatalogue::print()
 
 MatrixCatalogue::~MatrixCatalogue(){
     logger.log("MatrixCatalogue::~MatrixCatalogue");
-    for(auto matrix: this->matrices){
-        matrix.second->unload();
-        delete matrix.second;
+    if(!this->matrices.empty())
+    {
+        for(auto matrix: this->matrices){
+            matrix.second->unload();
+            delete matrix.second;
+        }
     }
 }

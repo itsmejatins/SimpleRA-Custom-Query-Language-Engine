@@ -29,7 +29,8 @@ enum QueryType
     EXPORTMATRIX,
 
     TRANSPOSEMATRIX,
-    CHECKSYMMETRY
+    CHECKSYMMETRY,
+    COMPUTEMATRIX
 
 };
 
@@ -88,6 +89,7 @@ public:
 
     string loadRelationName = "";
     string transposeRelationName = "";
+    string computeRelationName = "";
     string checkSymmetryRelationName = "";
 
     string printRelationName = "";
@@ -148,7 +150,7 @@ bool syntacticParseRENAMEMATRIX();
 
 //transpose matrix
 bool syntacticParseTRANSPOSEMATRIX();
-//check symmetry
+bool syntacticParseCOMPUTEMATRIX();
 bool syntacticParseCHECKSYMMETRY();
 
 bool isFileExists(string relationName);
