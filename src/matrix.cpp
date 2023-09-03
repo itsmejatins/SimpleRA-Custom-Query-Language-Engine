@@ -181,6 +181,7 @@ void Matrix::print()
 {
     logger.log("Matrix::print");
     unsigned int count = min((long long)PRINT_COUNT, this->rowCount);
+    cout << endl ;
 
     // print headings
     //  this->writeRow(this->columns, cout);
@@ -190,15 +191,16 @@ void Matrix::print()
     for (int rowCounter = 0; rowCounter < count; rowCounter++)
     {
         row = cursor.getNext("matrix");
-        //considering only the count number of columns
+        // considering only the count number of columns
         vector<int> finalRow;
-        for(int i=0;i<count;i++){
+        for (int i = 0; i < count; i++)
+        {
             finalRow.push_back(row[i]);
         }
 
         this->writeRow(finalRow, cout);
     }
-    printRowCount(this->rowCount);
+    // printRowCount(this->rowCount);
 }
 
 /**
@@ -258,11 +260,12 @@ bool Matrix::isPermanent()
     return false;
 }
 
-void sleepUtility(int sec) {
+void sleepUtility(int sec)
+{
     std::this_thread::sleep_for(std::chrono::milliseconds(sec));
 }
 
-vector<vector<int>> readPage(string matrixName, int pageNo)
+vector<vector<int>> readPage(string matrixName, int pageNo, int &nReads, int &nWrites)
 {
     string PATH = "../data/temp/";
     string fileName = PATH + matrixName + "_Page" + to_string(pageNo);
@@ -283,12 +286,12 @@ vector<vector<int>> readPage(string matrixName, int pageNo)
 
         data.push_back(row);
     }
-
+    nReads++;
     infile.close();
     return data;
 }
 
-void writeVectorToFile(vector<int> vec, string fileName)
+void writeVectorToFile(vector<int> vec, string fileName, int &nReads, int &nWrites)
 {
     ofstream outfile(fileName);
     for (size_t i = 0; i < vec.size(); ++i)
@@ -300,127 +303,184 @@ void writeVectorToFile(vector<int> vec, string fileName)
         }
     }
     outfile.close();
+    nWrites++;
 }
 
-vector<int> getRow(string matrixName, int rowPage, int rowIndex)
+vector<int> getRow(string matrixName, int rowPage, int rowIndex, int &nReads, int &nWrites)
 {
-    vector<vector<int>> data = readPage(matrixName, rowPage);
+    vector<vector<int>> data = readPage(matrixName, rowPage, nReads, nWrites);
     return data[rowIndex];
 }
 
-vector<int> getCol(string matrixName, int colIndex,int n_pages)
+vector<int> getCol(string matrixName, int colIndex, int n_pages, int &nReads, int &nWrites)
 {
     vector<int> col;
-    for(int pageNo=0; pageNo < n_pages; pageNo++){
-        vector<vector<int>> page = readPage(matrixName,pageNo);
-        for(vector<int> row : page ){
+    for (int pageNo = 0; pageNo < n_pages; pageNo++)
+    {
+        vector<vector<int>> page = readPage(matrixName, pageNo, nReads, nWrites);
+        for (vector<int> row : page)
+        {
             col.push_back(row[colIndex]);
         }
     }
     return col;
 }
 
-void writeRowToTemporaryBlock(string matrixName, int pageNo, int rowIndex)
+void writeRowToTemporaryBlock(string matrixName, int pageNo, int rowIndex, int &nReads, int &nWrites)
 {
     string tempFileName = "../data/temp/temp_block_row";
-    vector<int> row = getRow(matrixName,pageNo,rowIndex);
-    writeVectorToFile(row,tempFileName);
+    vector<int> row = getRow(matrixName, pageNo, rowIndex, nReads, nWrites);
+    writeVectorToFile(row, tempFileName, nReads, nWrites);
 }
 
-void writeColToTemporaryBlock(string matrixName, int colIndex,int n_pages){
+void writeColToTemporaryBlock(string matrixName, int colIndex, int n_pages, int &nReads, int &nWrites)
+{
     string tempFileName = "../data/temp/temp_block_col";
-    vector<int> col = getCol(matrixName,colIndex,n_pages);
-    writeVectorToFile(col,tempFileName);
+    vector<int> col = getCol(matrixName, colIndex, n_pages, nReads, nWrites);
+    writeVectorToFile(col, tempFileName, nReads, nWrites);
 }
 
-vector<int> readFromTempBlock(string fileName){
+vector<int> readFromTempBlock(string fileName, int &nReads, int &nWrites)
+{
     vector<int> numbers;
     ifstream infile(fileName);
     int number;
-    while (infile >> number) {
+    while (infile >> number)
+    {
         numbers.push_back(number);
     }
     infile.close();
+    nReads++;
     return numbers;
 }
 
-void updatePage(vector<vector<int>> page, string matrixName, int pageNo){
-    string fileName = "../data/temp/"+matrixName+"_Page"+ to_string(pageNo);
+void updatePage(vector<vector<int>> page, string matrixName, int pageNo, int &nReads, int &nWrites)
+{
+    string fileName = "../data/temp/" + matrixName + "_Page" + to_string(pageNo);
     ofstream outfile(fileName);
 
-    for (const auto& row : page) {
-        for (size_t i = 0; i < row.size(); ++i) {
+    for (const auto &row : page)
+    {
+        for (size_t i = 0; i < row.size(); ++i)
+        {
             outfile << row[i];
-            if (i < row.size() - 1) {
+            if (i < row.size() - 1)
+            {
                 outfile << " ";
             }
         }
         outfile << endl;
     }
     outfile.close();
+    nWrites++;
 }
 
-void updateRow(string matrixName, int rowPage, int rowIndex,int start){
+void updateRow(string matrixName, int rowPage, int rowIndex, int start, int &nReads, int &nWrites)
+{
     // read the whole page
-    vector<vector<int>> page = readPage(matrixName,rowPage);
+    vector<vector<int>> page = readPage(matrixName, rowPage, nReads, nWrites);
 
-    //read vector from the block -
-    vector<int> newRow = readFromTempBlock("../data/temp/temp_block_col");
+    // read vector from the block
+    vector<int> newRow = readFromTempBlock("../data/temp/temp_block_col", nReads, nWrites);
     // update the rowIndex-th row
 
-    for(int i = start ; i < page[rowIndex].size(); i++){
+    for (int i = start; i < page[rowIndex].size(); i++)
+    {
         page[rowIndex][i] = newRow[i];
     }
     // write that row to that page
-    updatePage(page,matrixName,rowPage);
+    updatePage(page, matrixName, rowPage, nReads, nWrites);
 }
 
-void updateCol(string matrixName, int colIndex, int n_pages,int maxRow){
+void updateCol(string matrixName, int colIndex, int n_pages, int maxRow, int &nReads, int &nWrites)
+{
 
-    //reading from the temporary row
-    vector<int> newCol = readFromTempBlock("../data/temp/temp_block_row");
+    // reading from the temporary row
+    vector<int> newCol = readFromTempBlock("../data/temp/temp_block_row", nReads, nWrites);
 
-    int newColIter=colIndex;
-    for(int pageNo = colIndex/maxRow; pageNo < n_pages; pageNo++) {
-        vector<vector<int>> page = readPage(matrixName, pageNo);
-        int i = pageNo == colIndex/maxRow ? colIndex % maxRow : 0;
-        for (; i < page.size(); i++) {
+    int newColIter = colIndex;
+    for (int pageNo = colIndex / maxRow; pageNo < n_pages; pageNo++)
+    {
+        vector<vector<int>> page = readPage(matrixName, pageNo, nReads, nWrites);
+        int i = pageNo == colIndex / maxRow ? colIndex % maxRow : 0;
+        for (; i < page.size(); i++)
+        {
             page[i][colIndex] = newCol[newColIter++];
         }
-        updatePage(page, matrixName, pageNo);
+        updatePage(page, matrixName, pageNo, nReads, nWrites);
     }
 }
 
-void Matrix::transposeMatrix() {
-//    cout << "TRANSPOSE MATRIX ";
+// Transpose Matrix
+void Matrix::transposeMatrix()
+{
     string matrixName = this->matrixName;
     int rows = this->rowCount;
     int rowPage = 0;
     int rowIndex = 0;
-    int read=0;
-    int write=0;
+    int nReads = 0;
+    int nWrites = 0;
     for (int i = 0; i < rows; i++)
     {
         rowPage = i / this->maxRowsPerBlock;
         rowIndex = i % this->maxRowsPerBlock;
-        writeRowToTemporaryBlock(matrixName, rowPage, rowIndex);
-        read++; //reading row from the block
-        write++; //writing the row to a temporary block
-        writeColToTemporaryBlock(matrixName, i,this->blockCount);
-        read++; //reading the column from the block
-        write++; //writing the column to a temporary block
+        writeRowToTemporaryBlock(matrixName, rowPage, rowIndex, nReads, nWrites);
+        writeColToTemporaryBlock(matrixName, i, this->blockCount, nReads, nWrites);
 
-        updateRow(matrixName,rowPage,rowIndex,i);
-        write++;    //writing the row to the original block
-        updateCol(matrixName,i,this->blockCount,this->maxRowsPerBlock);
-        write++;    //writing the column to the original column
+        updateRow(matrixName, rowPage, rowIndex, i, nReads, nWrites);
+        updateCol(matrixName, i, this->blockCount, this->maxRowsPerBlock, nReads, nWrites);
     }
-    cout << endl ;
-    cout << "Number of blocks read: " << read << endl;
-    cout << "Number of blocks written: "<< write << endl;
-    cout << "Number of blocks accessed: " << read+write << endl;
+    cout << endl;
+    cout << "Number of blocks read: " << nReads << endl;
+    cout << "Number of blocks written: " << nWrites << endl;
+    cout << "Number of blocks accessed: " << nReads + nWrites << endl;
     bufferManager.clearPool();
+}
 
+// helper function for checking Symmetry
+bool checkTempBlocks(int &nReads, int &nWrites)
+{
+    vector<int> newRow = readFromTempBlock("../data/temp/temp_block_col", nReads, nWrites);
+    vector<int> newCol = readFromTempBlock("../data/temp/temp_block_row", nReads, nWrites);
+
+    int size = newRow.size();
+    for (int i = 0; i < size; i++)
+    {
+        if (newRow[i] != newCol[i])
+            return false;
+    }
+    return true;
+}
+
+bool Matrix::checkSymmetry()
+{
+    cout << "check symmetry " << endl;
+    cout << this->matrixName << endl;
+
+    int rowPage = 0;
+    int rowIndex = 0;
+    int nReads = 0;
+    int nWrites = 0;
+    bool symmetry = true;
+    for (int i = 0; i < this->rowCount; i++)
+    {
+        rowPage = i / this->maxRowsPerBlock;
+        rowIndex = i % this->maxRowsPerBlock;
+        writeRowToTemporaryBlock(matrixName, rowPage, rowIndex, nReads, nWrites);
+        writeColToTemporaryBlock(matrixName, i, this->blockCount, nReads, nWrites);
+        if (checkTempBlocks(nReads, nWrites) == false){
+            symmetry = false;
+            break;
+        }
+            
+    }
+
+    cout << endl;
+    cout << "Number of blocks read: " << nReads << endl;
+    cout << "Number of blocks written: " << nWrites << endl;
+    cout << "Number of blocks accessed: " << nReads + nWrites << endl;
+
+    return symmetry;
 }
 
 /**

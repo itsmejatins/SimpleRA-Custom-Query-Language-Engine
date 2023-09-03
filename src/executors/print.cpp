@@ -63,4 +63,9 @@ void executePRINTMATRIX()
     logger.log("executePRINTMATRIX");
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.printRelationName);
     matrix->print();
+
+    cout << endl;
+    cout << "Number of blocks read: " << matrix->blockCount << endl;
+    cout << "Number of blocks written: " << 0 << endl;
+    cout << "Number of blocks accessed: " << matrix->blockCount << endl;
 }

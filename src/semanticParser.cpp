@@ -26,6 +26,7 @@ bool semanticParse(){
         case EXPORTMATRIX: return semanticParseEXPORTMATRIX();
 
         case TRANSPOSEMATRIX: return semanticParseTRANSPOSEMATRIX();
+        case CHECKSYMMETRY : return semanticParseCHECKSYMMETRY();
 
         default: cout<<"SEMANTIC ERROR"<<endl;
     }

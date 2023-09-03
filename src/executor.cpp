@@ -18,7 +18,7 @@ void executeCommand(){
         case SORT: executeSORT(); break;
         case SOURCE: executeSOURCE(); break;
 
-            // for matrix
+        // for matrix
         case CLEARMATRIX: executeCLEARMATRIX(); break;
         case LOADMATRIX: executeLOADMATRIX(); break;
         case PRINTMATRIX: executePRINTMATRIX(); break;
@@ -26,6 +26,7 @@ void executeCommand(){
         case EXPORTMATRIX: executeEXPORTMATRIX(); break;
 
         case TRANSPOSEMATRIX : executeTRANSPOSEMATRIX(); break;
+        case CHECKSYMMETRY : executeCHECKSYMMETRY(); break; 
 
         default: cout<<"PARSING ERROR"<<endl;
     }

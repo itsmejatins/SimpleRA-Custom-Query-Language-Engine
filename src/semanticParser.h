@@ -25,3 +25,4 @@ bool semanticParseEXPORTMATRIX();
 bool semanticParseRENAMEMATRIX();
 
 bool semanticParseTRANSPOSEMATRIX();
+bool semanticParseCHECKSYMMETRY();
