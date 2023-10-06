@@ -59,6 +59,8 @@ bool syntacticParse()
         return syntacticParseCOMPUTEMATRIX();
     else if( possibleQueryType == "CHECKSYMMETRY")
         return syntacticParseCHECKSYMMETRY();
+    else if ( possibleQueryType == "SORT")
+        return syntacticParseSORT();
     else
     {
         string resultantRelationName = possibleQueryType;
@@ -145,6 +147,10 @@ void ParsedQuery::clear()
     this->sortRelationName = "";
 
     this->sourceFileName = "";
+
+
+    this->sortingStrategies.clear();
+    this->sortColumnNames.clear();
 }
 
 /**
