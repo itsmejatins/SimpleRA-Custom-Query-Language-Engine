@@ -1,0 +1,1 @@
+SORT DEPARTMENT BY Dnumber,Mgr_ssn,Mgr_start_date IN ASC, DESC, DESC

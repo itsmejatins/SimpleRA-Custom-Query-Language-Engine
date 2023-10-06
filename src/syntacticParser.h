@@ -115,8 +115,11 @@ public:
     int selectionIntLiteral = 0;
 
     SortingStrategy sortingStrategy = NO_SORT_CLAUSE;
+    vector<string> sortingStrategies;
+
     string sortResultRelationName = "";
     string sortColumnName = "";
+    vector<string> sortColumnNames;
     string sortRelationName = "";
 
     string sourceFileName = "";
