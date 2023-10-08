@@ -68,6 +68,6 @@ bool semanticParseSORT(){
 
 void executeSORT(){
     logger.log("executeSORT");
-    cout << " LETS WORK ON SORTING " << endl;
-    return;
+    Table *table = tableCatalogue.getTable(parsedQuery.sortRelationName);
+    table->sort();
 }
