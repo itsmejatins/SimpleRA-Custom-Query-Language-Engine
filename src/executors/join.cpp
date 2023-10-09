@@ -1,5 +1,4 @@
 #include "global.h"
-#include <bits/stdc++.h>
 
 bool
 evaulateJOINCondition(const vector<int> &R_pointer, const vector<int> &S_pointer, int firstColIndex, int secondColIndex,

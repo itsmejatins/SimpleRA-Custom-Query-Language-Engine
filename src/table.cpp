@@ -360,7 +360,8 @@ vector<vector<int> > readPage(string filePath)
             row.push_back(value);
         }
 
-        data.push_back(row);
+        if(row.size() > 0)
+            data.push_back(row);
     }
     infile.close();
     return data;
@@ -369,6 +370,9 @@ vector<vector<int> > readPage(string filePath)
 
 void writeVectorToFile(vector<int> vec, string fileName)
 {
+    if(vec.size() == 0)
+        return;
+
     ofstream outfile(fileName, ios::app);
     if(!outfile)
     {
@@ -387,28 +391,39 @@ void writeVectorToFile(vector<int> vec, string fileName)
     outfile.close();
 }
 
-vector<int> tempIndices = {2,1,0};
+vector<int> sortColIndices ;
 
-bool compareFirstElement(const vector<int>& a, const vector<int>& b) {
-    for(int i: tempIndices)
+bool compareTwoVectors(const vector<int>& a, const vector<int>& b) {
+
+    for(int c = 0 ; c < sortColIndices.size(); c++)
     {
-        if(a[i] != b[i])
-            return a[i] < b[i];
+        int col = sortColIndices.at(c);
+        if(a[col] == b[col])
+            continue;
+        string strategy = parsedQuery.sortingStrategies.at(c);
+        if(strategy == "ASC")
+            return a.at(col) < b.at(col);
+        else
+            return a.at(col) > b.at(col);
     }
+
     return a[0] < b[0];
 }
-
-
-
 
 void Table::initialRun()
 {
     logger.log("Table::initialRun");
+
+    for(string s : parsedQuery.sortColumnNames)
+    {
+        sortColIndices.push_back(this->attributeIndexMap[s]);
+    }
+
     for(int pageNumber = 0; pageNumber < this->blockCount; pageNumber++)
     {
         string filePath = "../data/temp/" + this->tableName + "_Page" + to_string(pageNumber);
         vector<vector<int> > currPage = readPage(filePath);
-        std::sort(currPage.begin(), currPage.end(), compareFirstElement);
+        std::sort(currPage.begin(), currPage.end(), compareTwoVectors);
         ofstream outfile(filePath, ios::trunc);
         if(!outfile)
         {
@@ -430,6 +445,10 @@ void Table::initialRun()
         outfile.close();
     }
 }
+
+
+
+
 void Table::sort()
 {
     logger.log("Table::sort");
@@ -538,7 +557,8 @@ void Table::sort()
 
 
                 // no edge case, copy the smaller number to the block
-                if(iBlock[ii][0] <= jBlock[jj][0])
+//                iBlock[ii][0] <= jBlock[jj][0]
+                if(compareTwoVectors(iBlock[ii], jBlock[jj]))
                 {
                     // copy iBlock[ii][0] to tempBlock
                     if(writeRowIndex + 1 > maxRowsInBlock)
