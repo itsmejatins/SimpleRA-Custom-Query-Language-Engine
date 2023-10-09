@@ -91,4 +91,8 @@ void writeRow(vector<T> row)
     this->writeRow(row, fout);
     fout.close();
 }
+
+    void sort();
+
+    void initialRun();
 };
