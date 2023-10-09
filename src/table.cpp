@@ -84,12 +84,15 @@ bool Table::extractColumnNames(string firstLine)
     unordered_set<string> columnNames;
     string word;
     stringstream s(firstLine);
+    int attributeCount=0;
     while (getline(s, word, ','))
     {
         word.erase(std::remove_if(word.begin(), word.end(), ::isspace), word.end());
         if (columnNames.count(word))
             return false;
         columnNames.insert(word);
+        this->attributeIndexMap.insert({word,attributeCount});
+        attributeCount++;
         this->columns.emplace_back(word);
     }
     this->columnCount = this->columns.size();
@@ -238,8 +241,6 @@ void Table::print()
     printRowCount(this->rowCount);
 }
 
-
-
 /**
  * @brief This function returns one row of the table using the cursor object. It
  * returns an empty row is all rows have been read.
@@ -256,8 +257,6 @@ void Table::getNextPage(Cursor *cursor)
         cursor->nextPage(cursor->pageIndex+1);
     }
 }
-
-
 
 /**
  * @brief called when EXPORT command is invoked to move source file to "data"

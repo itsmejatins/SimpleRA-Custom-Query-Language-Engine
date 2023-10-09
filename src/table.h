@@ -1,5 +1,6 @@
 #include "cursor.h"
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -36,6 +37,7 @@ public:
     bool indexed = false;
     string indexedColumn = "";
     IndexingStrategy indexingStrategy = NOTHING;
+    unordered_map<string,int> attributeIndexMap;
     
     bool extractColumnNames(string firstLine);
     bool blockify();
