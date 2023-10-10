@@ -16,6 +16,7 @@ void executeRENAME();
 void executeSELECTION();
 void executeSORT();
 void executeSOURCE();
+void executeORDERBY();
 
 // for matrix
 void executeCLEARMATRIX();

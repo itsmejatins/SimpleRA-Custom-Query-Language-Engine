@@ -446,9 +446,6 @@ void Table::initialRun()
     }
 }
 
-
-
-
 void Table::sort()
 {
     logger.log("Table::sort");
@@ -608,3 +605,60 @@ void Table::sort()
 
     bufferManager.clearPool();
 }
+
+void Table::orderBy()
+{
+    // read all the pages in the temp and make a new file called 'tableRealtionName_MEMORY'
+    string copiedFilePath = "../data/" + parsedQuery.orderByResultRelation + ".csv";
+
+    // --> Copying column names
+    ofstream outfile(copiedFilePath, ios::app);
+    if(!outfile)
+    {
+        cout << "Error in writing to the file, returing" << endl;
+        return;
+    }
+    for (size_t i = 0; i < this->columns.size(); ++i)
+    {
+        outfile << this->columns[i];
+        if (i < this->columns.size() - 1)
+        {
+            outfile << ",";
+        }
+    }
+    outfile << '\n';
+    //--> done
+    // --> reading all pages and writing them to csv (numbers will be separated by, instead of space
+    for(int i = 0; i < this->blockCount; i++)
+    {
+        string pagePath = "../data/temp/" + this->tableName + "_Page" + to_string(i);
+        vector<vector<int>> page = readPage(pagePath);
+        for(vector<int> row : page)
+        {
+            for(size_t c = 0; c < row.size(); c++)
+            {
+                outfile << row[c];
+                if(c < row.size() -1)
+                    outfile << ",";
+            }
+            outfile << '\n';
+        }
+    }
+    // --> done
+    outfile.close();
+
+
+    // load this MEMORY table
+    Table *table = new Table(parsedQuery.orderByResultRelation);
+    if (table->load())
+        tableCatalogue.insertTable(table);
+
+    // now sort this table
+    parsedQuery.sortColumnNames = {parsedQuery.orderByCol};
+    parsedQuery.sortingStrategies = {parsedQuery.orderByStrategy};
+    table->sort();
+
+    // delete the created csv file
+    remove(&copiedFilePath[0]);
+}
+

@@ -17,6 +17,7 @@ bool semanticParse(){
         case SELECTION: return semanticParseSELECTION();
         case SORT: return semanticParseSORT();
         case SOURCE: return semanticParseSOURCE();
+        case ORDER_BY: return semanticParseORDERBY();
 
             // for matrix
         case CLEARMATRIX: return semanticParseCLEARMATRIX();

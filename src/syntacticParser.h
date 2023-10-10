@@ -19,6 +19,7 @@ enum QueryType
     SELECTION,
     SORT,
     SOURCE,
+    ORDER_BY,
     UNDETERMINED,
 
     // for matrix
@@ -124,6 +125,11 @@ public:
 
     string sourceFileName = "";
 
+    string orderByRelation = "";
+    string orderByResultRelation = "";
+    string orderByCol = "";
+    string orderByStrategy = "";
+
     ParsedQuery();
     void clear();
 };
@@ -143,6 +149,7 @@ bool syntacticParseRENAME();
 bool syntacticParseSELECTION();
 bool syntacticParseSORT();
 bool syntacticParseSOURCE();
+bool syntacticParseORDERBY();
 
 // for matrix
 bool syntacticParseCLEARMATRIX();

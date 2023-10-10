@@ -95,4 +95,6 @@ void writeRow(vector<T> row)
     void sort();
 
     void initialRun();
+
+    void orderBy();
 };

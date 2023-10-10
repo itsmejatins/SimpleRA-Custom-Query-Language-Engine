@@ -16,6 +16,8 @@ bool semanticParseRENAME();
 bool semanticParseSELECTION();
 bool semanticParseSORT();
 bool semanticParseSOURCE();
+bool semanticParseORDERBY();
+
 
 // for matrix
 bool semanticParseCLEARMATRIX();

@@ -1,7 +1,6 @@
 #include "global.h"
 
-bool
-evaulateJOINCondition(const vector<int> &R_pointer, const vector<int> &S_pointer, int firstColIndex, int secondColIndex,
+bool evaulateJOINCondition(const vector<int> &R_pointer, const vector<int> &S_pointer, int firstColIndex, int secondColIndex,
                       int binaryOperator);
 
 /**

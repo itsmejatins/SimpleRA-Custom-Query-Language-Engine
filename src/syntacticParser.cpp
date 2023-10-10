@@ -82,6 +82,8 @@ bool syntacticParse()
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
+        else if (possibleQueryType == "ORDER")
+            return syntacticParseORDERBY();
         else
         {
             cout << "SYNTAX ERROR" << endl;

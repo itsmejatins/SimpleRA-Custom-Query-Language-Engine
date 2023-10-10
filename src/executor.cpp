@@ -17,6 +17,7 @@ void executeCommand(){
         case SELECTION: executeSELECTION(); break;
         case SORT: executeSORT(); break;
         case SOURCE: executeSOURCE(); break;
+        case ORDER_BY: executeORDERBY(); break;
 
             // for matrix
         case CLEARMATRIX: executeCLEARMATRIX(); break;
