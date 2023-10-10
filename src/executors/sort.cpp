@@ -18,39 +18,23 @@ void printVector(vector<string> stringVector){
 bool syntacticParseSORT(){
     logger.log("syntacticParseSORT");
     printVector(tokenizedQuery);
-    if( tokenizedQuery[2] != "BY" || tokenizedQuery[6] != "IN"){
+    if( tokenizedQuery[2] != "BY" ){
         cout<<"SYNTAX ERROR"<<endl;
         return false;
     }
     parsedQuery.queryType = SORT;
-//    parsedQuery.sortResultRelationName = tokenizedQuery[0];
     parsedQuery.sortRelationName = tokenizedQuery[1];
-//    parsedQuery.sortColumnName = tokenizedQuery[5];
-//    string sortingStrategy = tokenizedQuery[7];
 
     int noAttributes = (tokenizedQuery.size()-4)/2;
     for(int i=0;i<noAttributes;i++) {
         parsedQuery.sortColumnNames.push_back(tokenizedQuery[i + 3]);
-        parsedQuery.sortingStrategies.push_back(tokenizedQuery[i + 7]);
+        parsedQuery.sortingStrategies.push_back(tokenizedQuery[i + 3 + noAttributes + 1]);
     }
-//    if(sortingStrategy == "ASC")
-//        parsedQuery.sortingStrategy = ASC;
-//    else if(sortingStrategy == "DESC")
-//        parsedQuery.sortingStrategy = DESC;
-//    else{
-//        cout<<"SYNTAX ERROR"<<endl;
-//        return false;
-//    }
     return true;
 }
 
 bool semanticParseSORT(){
     logger.log("semanticParseSORT");
-
-//    if(tableCatalogue.isTable(parsedQuery.sortResultRelationName)){
-//        cout<<"SEMANTIC ERROR: Resultant relation already exists"<<endl;
-//        return false;
-//    }
 
     if(!tableCatalogue.isTable(parsedQuery.sortRelationName)){
         cout<<"SEMANTIC ERROR: Relation doesn't exist"<<endl;
