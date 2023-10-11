@@ -5,6 +5,7 @@ CXX = g++ -std=c++14
 CXXFLAGS = -g -I . 
 
 SRC := $(wildcard *.cpp)
+
 OBJS = $(SRC:.cpp=.o)
 
 EXEC_DIR = ./executors

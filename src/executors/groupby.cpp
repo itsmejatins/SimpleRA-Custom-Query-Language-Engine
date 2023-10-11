@@ -1,6 +1,8 @@
 #include "global.h"
-#include <bits/stdc++.h>
 #include <vector>
+#include <string>
+using namespace std;
+
 /**
  * @brief
  * SYNTAX: R <- GROUP BY grouping_attribute FROM relation_name HAVING aggregate(attribute) bin_op attribute_value RETURN aggregate_function(attribute)
@@ -32,15 +34,52 @@ void printVectorInt(vector<int> intVec){
     }
     cout << " ]" << endl;
 }
+
+bool isNumber(const std::string& s) {
+    try {
+        size_t pos;
+        std::stod(s, &pos); // Attempt to convert the string to a double
+        return pos == s.size(); // Check if the entire string was used in the conversion
+    } catch (...) {
+        // std::invalid_argument or std::out_of_range exception indicates conversion failure
+        return false;
+    }
+}
+
 bool syntacticParseGROUPBY()
 {
     logger.log("syntacticParseGROUPBY");
     cout << "TOKENIZED QUERY " << endl;
     printVectorString(tokenizedQuery);
+    vector<string> ctq; // condensedTokenizedQuery
 
-    if (tokenizedQuery.size() != 13 || tokenizedQuery[2] != "GROUP" ||
-        tokenizedQuery[3] != "BY" || tokenizedQuery[5] != "FROM" ||
-        tokenizedQuery[7] != "HAVING" || tokenizedQuery[11] != "RETURN" )
+    if(isNumber(tokenizedQuery.at(tokenizedQuery.size() - 1)))
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+
+    for(int i = 0; i < tokenizedQuery.size(); )
+    {
+        string s = tokenizedQuery.at(i);
+        if(isNumber(s))
+        {
+            i++;
+            while(isNumber(tokenizedQuery.at(i)))
+            {
+                s += tokenizedQuery.at(i);
+                i++;
+            }
+            ctq.push_back(s);
+            continue;
+        }
+        else
+            ctq.push_back(s);
+        i++;
+    }
+    if ( ctq[2] != "GROUP" ||
+        ctq[3] != "BY" || ctq[5] != "FROM" ||
+        ctq[7] != "HAVING" || ctq[ctq.size() - 2] != "RETURN" )
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
@@ -94,9 +133,9 @@ bool syntacticParseGROUPBY()
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.groupByAggregateThreshold = stoi(tokenizedQuery[10]);
+    parsedQuery.groupByAggregateThreshold = stoi(ctq[10]);
     
-    string aggregateReturnFunc = tokenizedQuery[12].substr(0,3);
+    string aggregateReturnFunc = ctq[ctq.size() - 1].substr(0,3);
     if ( aggregateCondFunc == "MIN" ){
         parsedQuery.groupByReturnAggregateFunction = MIN;
     }else if ( aggregateCondFunc == "MAX" ){
@@ -111,7 +150,7 @@ bool syntacticParseGROUPBY()
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.groupByReturnAttribute = tokenizedQuery[12].substr(4,tokenizedQuery[12].size()-5);
+    parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(4,ctq[ctq.size() - 1].size()-5);
     cout << "parameters initialized " << endl;
     return true;
 }
