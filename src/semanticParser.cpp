@@ -9,6 +9,7 @@ bool semanticParse(){
         case EXPORT: return semanticParseEXPORT();
         case INDEX: return semanticParseINDEX();
         case JOIN: return semanticParseJOIN();
+        case GROUP: return semanticParseGROUPBY();
         case LIST: return semanticParseLIST();
         case LOAD: return semanticParseLOAD();
         case PRINT: return semanticParsePRINT();

@@ -9,6 +9,7 @@ void executeCommand(){
         case EXPORT: executeEXPORT(); break;
         case INDEX: executeINDEX(); break;
         case JOIN: executeJOIN(); break;
+        case GROUP: executeGROUPBY(); break;
         case LIST: executeLIST(); break;
         case LOAD: executeLOAD(); break;
         case PRINT: executePRINT(); break;

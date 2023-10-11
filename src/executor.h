@@ -8,6 +8,7 @@ void executeDISTINCT();
 void executeEXPORT();
 void executeINDEX();
 void executeJOIN();
+void executeGROUPBY();
 void executeLIST();
 void executeLOAD();
 void executePRINT();

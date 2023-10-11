@@ -21,6 +21,7 @@ enum QueryType
     SOURCE,
     ORDER_BY,
     UNDETERMINED,
+    GROUP,
 
     // for matrix
     CLEARMATRIX,
@@ -58,6 +59,14 @@ enum SelectType
     COLUMN,
     INT_LITERAL,
     NO_SELECT_CLAUSE
+};
+
+enum AggregateFunction{
+    MIN,
+    MAX,
+    SUM,
+    COUNT,
+    AVG
 };
 
 class ParsedQuery
@@ -125,10 +134,29 @@ public:
 
     string sourceFileName = "";
 
+
     string orderByRelation = "";
     string orderByResultRelation = "";
     string orderByCol = "";
     string orderByStrategy = "";
+
+    //GROUP BY attributes
+
+    //column in the table based on which table has to be sorted.
+    string groupByResultRelationName = "";
+    string groupingAttribute = "";
+    string groupByRelationName = "";
+
+    AggregateFunction groupByConditionAggregateFunction;
+    string groupByConditionAttribute = "";
+
+    //comparison operator mentioned above
+    BinaryOperator groupByBinaryOperator = NO_BINOP_CLAUSE;
+
+    unsigned int groupByAggregateThreshold;
+    AggregateFunction groupByReturnAggregateFunction;
+    string groupByReturnAttribute = "";
+
 
     ParsedQuery();
     void clear();
@@ -141,6 +169,7 @@ bool syntacticParseDISTINCT();
 bool syntacticParseEXPORT();
 bool syntacticParseINDEX();
 bool syntacticParseJOIN();
+bool syntacticParseGROUPBY();
 bool syntacticParseLIST();
 bool syntacticParseLOAD();
 bool syntacticParsePRINT();
@@ -166,3 +195,7 @@ bool syntacticParseCHECKSYMMETRY();
 bool isFileExists(string relationName);
 bool isFileExistsAnywhere(const std::string& filePath);
 bool isQueryFile(string relationName);
+
+//utilityFunctions
+void printVectorString(vector<string> stringVec);
+void printVectorInt(vector<int> intVec);

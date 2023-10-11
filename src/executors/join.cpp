@@ -8,25 +8,11 @@ bool evaulateJOINCondition(const vector<int> &R_pointer, const vector<int> &S_po
  * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2
  */
 
-void printVectorJoin(vector<string> stringVector){
-    cout << "[ ";
-    for( auto str : stringVector ){
-        cout << str + " , ";
-    }
-    cout << " ]" << endl;
-}
 
-void printVectorInt( vector<int> vectorInt){
-    cout << "[ ";
-    for( auto num : vectorInt ){
-        cout << num << " , ";
-    }
-    cout << " ]" << endl;
-}
 bool syntacticParseJOIN()
 {
     logger.log("syntacticParseJOIN");
-//    printVectorJoin(tokenizedQuery);
+//    printVectorInt(tokenizedQuery);
     if (tokenizedQuery.size() != 9 || tokenizedQuery[5] != "ON")
     {
         cout << "SYNTAX ERROR" << endl;
@@ -103,7 +89,7 @@ bool evaulateGREATERTHANJOINCondition(const vector<int> &R_pointer, const vector
 
 void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorJoin(columns);
+    printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
 
@@ -152,7 +138,7 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
 void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorJoin(columns);
+    printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
 
@@ -197,7 +183,7 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
 
 void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorJoin(columns);
+    printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
 

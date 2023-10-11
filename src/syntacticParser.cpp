@@ -84,6 +84,8 @@ bool syntacticParse()
             return syntacticParseSORT();
         else if (possibleQueryType == "ORDER")
             return syntacticParseORDERBY();
+        else if( possibleQueryType == "GROUP")
+            return syntacticParseGROUPBY();
         else
         {
             cout << "SYNTAX ERROR" << endl;
