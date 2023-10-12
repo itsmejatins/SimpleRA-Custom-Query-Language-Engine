@@ -121,8 +121,8 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
             while( !R_pointer.empty() && !S_pointer.empty() && R_pointer[firstColIndex] == S_pointer[secondColIndex] ){
                 resultantRow = R_pointer;
                 resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-                cout<< "res row " ;
-                printVectorInt(resultantRow);
+                // cout<< "res row " ;
+                // printVectorInt(resultantRow);
                 resultantTable->writeRow(resultantRow);
                 S_pointer = cursor2.getNext("table");
             }
@@ -168,8 +168,8 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
         while( !S_pointer.empty() ){
             resultantRow = R_pointer;
             resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-            cout<< "res row " ;
-            printVectorInt(resultantRow);
+            // cout<< "res row " ;
+            // printVectorInt(resultantRow);
             resultantTable->writeRow(resultantRow);
             S_pointer = cursor2.getNext("table");
         }
@@ -196,10 +196,6 @@ void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string>
 
     int firstColIndex = table1.attributeIndexMap[parsedQuery.joinFirstColumnName];
     int secondColIndex = table2.attributeIndexMap[parsedQuery.joinSecondColumnName];
-    cout << parsedQuery.joinFirstColumnName << " " <<
-         parsedQuery.joinSecondColumnName << " "<<
-         firstColIndex << " " <<
-         secondColIndex << " " << endl;
 
     vector<int> resultantRow;
     resultantRow.reserve(resultantTable->columnCount);
@@ -211,8 +207,8 @@ void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string>
             if(evaulateLESSTHANJOINCondition(R_pointer,S_pointer,firstColIndex,secondColIndex)) break;
             resultantRow = R_pointer;
             resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-            cout<< "res row " ;
-            printVectorInt(resultantRow);
+            // cout<< "res row " ;
+            // printVectorInt(resultantRow);
             resultantTable->writeRow(resultantRow);
             S_pointer = cursor2.getNext("table");
         }
@@ -237,10 +233,6 @@ void performNOTEQIJOIN(Table table1,Table table2, vector<string> &columns){
 
     int firstColIndex = table1.attributeIndexMap[parsedQuery.joinFirstColumnName];
     int secondColIndex = table2.attributeIndexMap[parsedQuery.joinSecondColumnName];
-    cout << parsedQuery.joinFirstColumnName << " " <<
-         parsedQuery.joinSecondColumnName << " "<<
-         firstColIndex << " " <<
-         secondColIndex << " " << endl;
 
     vector<int> resultantRow;
     resultantRow.reserve(resultantTable->columnCount);
@@ -252,8 +244,8 @@ void performNOTEQIJOIN(Table table1,Table table2, vector<string> &columns){
             if( R_pointer[firstColIndex] != S_pointer[secondColIndex] ){
                 resultantRow = R_pointer;
                 resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-                cout<< "res row " ;
-                printVectorInt(resultantRow);
+                // cout<< "res row " ;
+                // printVectorInt(resultantRow);
                 resultantTable->writeRow(resultantRow);
             }
             S_pointer = cursor2.getNext("table");

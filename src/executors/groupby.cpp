@@ -1,7 +1,6 @@
 #include "global.h"
 #include <vector>
 #include <string>
-using namespace std;
 
 /**
  * @brief
@@ -14,33 +13,41 @@ using namespace std;
  * tokenizedQuery[5] = FROM
  * tokenizedQuery[6] = relation_name                        ->      string groupByRelationName
  * tokenizedQuery[7] = HAVING
- * tokenizedQuery[8] = aggregate(attribute)                 ->      groupByConditionAggregateFunction
+ * tokenizedQuery[8] = aggregate(attribute)                 ->      AggregateFunction groupByConditionAggregateFunction
  * tokenizedQuery[9] = bin_op                               ->      BinaryOperator groupByBinaryOperator
  * tokenizedQuery[10] = attribute_value                     ->      unsigned int groupByAggregateThreshold
  * tokenizedQuery[11] = RETURN
  * tokenizedQuery[12] = aggregate_function(attribute)       ->      AggregateFunction groupByReturnAggregateFunction
  */
-void printVectorString(vector<string> stringVec){
-    cout << " [ " ;
-    for( auto str : stringVec ){
+void printVectorString(vector<string> stringVec)
+{
+    cout << " [ ";
+    for (auto str : stringVec)
+    {
         cout << str << " , ";
     }
     cout << " ]" << endl;
 }
-void printVectorInt(vector<int> intVec){
-    cout << " [ " ;
-    for( auto str : intVec ){
+void printVectorInt(vector<int> intVec)
+{
+    cout << " [ ";
+    for (auto str : intVec)
+    {
         cout << str << " , ";
     }
     cout << " ]" << endl;
 }
 
-bool isNumber(const std::string& s) {
-    try {
+bool isNumber(const std::string &s)
+{
+    try
+    {
         size_t pos;
-        std::stod(s, &pos); // Attempt to convert the string to a double
+        std::stod(s, &pos);     // Attempt to convert the string to a double
         return pos == s.size(); // Check if the entire string was used in the conversion
-    } catch (...) {
+    }
+    catch (...)
+    {
         // std::invalid_argument or std::out_of_range exception indicates conversion failure
         return false;
     }
@@ -53,19 +60,19 @@ bool syntacticParseGROUPBY()
     printVectorString(tokenizedQuery);
     vector<string> ctq; // condensedTokenizedQuery
 
-    if(isNumber(tokenizedQuery.at(tokenizedQuery.size() - 1)))
+    if (isNumber(tokenizedQuery.at(tokenizedQuery.size() - 1)))
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
 
-    for(int i = 0; i < tokenizedQuery.size(); )
+    for (int i = 0; i < tokenizedQuery.size();)
     {
         string s = tokenizedQuery.at(i);
-        if(isNumber(s))
+        if (isNumber(s))
         {
             i++;
-            while(isNumber(tokenizedQuery.at(i)))
+            while (isNumber(tokenizedQuery.at(i)))
             {
                 s += tokenizedQuery.at(i);
                 i++;
@@ -77,44 +84,64 @@ bool syntacticParseGROUPBY()
             ctq.push_back(s);
         i++;
     }
-    if ( ctq[2] != "GROUP" ||
+    if (ctq[2] != "GROUP" ||
         ctq[3] != "BY" || ctq[5] != "FROM" ||
-        ctq[7] != "HAVING" || ctq[ctq.size() - 2] != "RETURN" )
+        ctq[7] != "HAVING" || ctq[ctq.size() - 2] != "RETURN")
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
 
-    //set parsedQuery attributes
+    // set parsedQuery attributes
     parsedQuery.queryType = GROUP;
     parsedQuery.groupByResultRelationName = tokenizedQuery[0];
     parsedQuery.groupingAttribute = tokenizedQuery[4];
     parsedQuery.groupByRelationName = tokenizedQuery[6];
-    
-    //extracting aggregate(attribute)
-    //aggregate func length will always be 3
-    // str.substr(0,3) << "\n";
-    // str.substr(3+1,str.size()-5);
 
-    string aggregateCondFunc = tokenizedQuery[8].substr(0,3);
-    if ( aggregateCondFunc == "MIN" ){
+    // extracting aggregate(attribute)
+    //  str.substr(startingIndex, length)
+    string aggregateCondFunc = tokenizedQuery[8].substr(0, 3);
+    parsedQuery.groupByConditionAttribute = tokenizedQuery[8].substr(4, tokenizedQuery[8].size() - 5);
+
+    cout << "aggregateCondFunc " << aggregateCondFunc << endl;
+    if (aggregateCondFunc == "MIN")
+    {
         parsedQuery.groupByConditionAggregateFunction = MIN;
-    }else if ( aggregateCondFunc == "MAX" ){
+    }
+    else if (aggregateCondFunc == "MAX")
+    {
         parsedQuery.groupByConditionAggregateFunction = MAX;
-    }else if ( aggregateCondFunc == "SUM" ){
+    }
+    else if (aggregateCondFunc == "SUM")
+    {
         parsedQuery.groupByConditionAggregateFunction = SUM;
-    }else if ( aggregateCondFunc == "COUNT" ){
-        parsedQuery.groupByConditionAggregateFunction = COUNT;
-    }else if ( aggregateCondFunc == "AVG" ){
+    }
+    else if (aggregateCondFunc == "COU")
+    {
+        string aggregateCondFuncFULL = tokenizedQuery[8].substr(0, 5);
+        cout << "aggregateCondFuncFULL " << aggregateCondFuncFULL << endl;
+        if(aggregateCondFuncFULL == "COUNT"){
+            parsedQuery.groupByConditionAggregateFunction = COUNT;
+            parsedQuery.groupByConditionAttribute = tokenizedQuery[8].substr(6, tokenizedQuery[8].size() - 7);
+        }
+        else{
+            cout << "SYNTAX ERROR "<< endl;
+            return false;
+        }
+    }
+    else if (aggregateCondFunc == "AVG")
+    {
         parsedQuery.groupByConditionAggregateFunction = AVG;
-    }else{
+    }
+    else
+    {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
 
-    parsedQuery.groupByConditionAttribute = tokenizedQuery[8].substr(4,tokenizedQuery[8].size()-5);
+    
 
-    //set group by binary operator
+    // set group by binary operator
     string binaryOperator = tokenizedQuery[9];
     if (binaryOperator == "<")
         parsedQuery.groupByBinaryOperator = LESS_THAN;
@@ -134,99 +161,219 @@ bool syntacticParseGROUPBY()
         return false;
     }
     parsedQuery.groupByAggregateThreshold = stoi(ctq[10]);
-    
-    string aggregateReturnFunc = ctq[ctq.size() - 1].substr(0,3);
-    if ( aggregateCondFunc == "MIN" ){
+
+    string aggregateReturnFunc = ctq[ctq.size() - 1].substr(0, 3);
+    parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(4, ctq[ctq.size() - 1].size() - 5);
+
+    if (aggregateReturnFunc == "MIN")
+    {
         parsedQuery.groupByReturnAggregateFunction = MIN;
-    }else if ( aggregateCondFunc == "MAX" ){
+    }
+    else if (aggregateReturnFunc == "MAX")
+    {
         parsedQuery.groupByReturnAggregateFunction = MAX;
-    }else if ( aggregateCondFunc == "SUM" ){
+    }
+    else if (aggregateReturnFunc == "SUM")
+    {
         parsedQuery.groupByReturnAggregateFunction = SUM;
-    }else if ( aggregateCondFunc == "COUNT" ){
-        parsedQuery.groupByReturnAggregateFunction = COUNT;
-    }else if ( aggregateCondFunc == "AVG" ){
+    }
+    else if (aggregateReturnFunc == "COU")
+    {
+        string aggregateReturnFuncFULL = ctq[ctq.size() - 1].substr(0, 5);
+        if(aggregateReturnFuncFULL == "COUNT"){
+            parsedQuery.groupByReturnAggregateFunction = COUNT;
+            parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(6, ctq[ctq.size() - 1].size() - 7);
+        }
+        else{
+            cout << "SYNTAX ERROR "<< endl;
+            return false;
+        }
+    }
+    else if (aggregateReturnFunc == "AVG")
+    {
         parsedQuery.groupByReturnAggregateFunction = AVG;
-    }else{
+    }
+    else
+    {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(4,ctq[ctq.size() - 1].size()-5);
+    
+
+    parsedQuery.groupByResultRelationAttribute = aggregateReturnFunc + parsedQuery.groupByReturnAttribute;
     cout << "parameters initialized " << endl;
     return true;
 }
 
 bool semanticParseGROUPBY()
 {
-     logger.log("semanticParseGROUPBY");
+    logger.log("semanticParseGROUPBY");
+    if (tableCatalogue.isTable(parsedQuery.groupByResultRelationName))
+    {
+        cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
+        return false;
+    }
 
-     if (tableCatalogue.isTable(parsedQuery.groupByResultRelationName))
-     {
-         cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
-         return false;
-     }
+    if (!tableCatalogue.isTable(parsedQuery.groupByRelationName))
+    {
+        cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
+        return false;
+    }
 
-     if (!tableCatalogue.isTable(parsedQuery.groupByRelationName) )
-     {
-         cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
-         return false;
-     }
-
-     if (!tableCatalogue.isColumnFromTable(parsedQuery.groupingAttribute, parsedQuery.groupByRelationName) ||
-         !tableCatalogue.isColumnFromTable(parsedQuery.groupByConditionAttribute, parsedQuery.groupByRelationName) ||
-         !tableCatalogue.isColumnFromTable(parsedQuery.groupByReturnAttribute, parsedQuery.groupByRelationName) )
-     {
-         cout << parsedQuery.groupingAttribute << endl ;
-         cout << parsedQuery.groupByConditionAttribute << endl ;
-         cout << parsedQuery.groupByReturnAttribute << endl ;
-         cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
-         return false;
-     }
+    if (!tableCatalogue.isColumnFromTable(parsedQuery.groupingAttribute, parsedQuery.groupByRelationName) ||
+        !tableCatalogue.isColumnFromTable(parsedQuery.groupByConditionAttribute, parsedQuery.groupByRelationName) ||
+        !tableCatalogue.isColumnFromTable(parsedQuery.groupByReturnAttribute, parsedQuery.groupByRelationName))
+    {
+        cout << parsedQuery.groupingAttribute << endl;
+        cout << parsedQuery.groupByConditionAttribute << endl;
+        cout << parsedQuery.groupByReturnAttribute << endl;
+        cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
+        return false;
+    }
     return true;
-     cout << " seantic group by done " << endl;
+    cout << " seantic group by done " << endl;
 }
 
-
+double performConditionAggregation(int conditionValue, int currVal, int count)
+{
+    if (parsedQuery.groupByConditionAggregateFunction == MIN)
+    {
+        return min(conditionValue, currVal);
+    }
+    else if (parsedQuery.groupByConditionAggregateFunction == MAX)
+    {
+        return max(conditionValue, currVal);
+    }
+    else if (parsedQuery.groupByConditionAggregateFunction == SUM)
+    {
+        return conditionValue + currVal;
+    }
+    else if (parsedQuery.groupByConditionAggregateFunction == COUNT)
+    {
+        return count;
+    }
+    else if (parsedQuery.groupByConditionAggregateFunction == AVG)
+    {
+        return ((double)(conditionValue * (count - 1) + currVal)) / (double)count;
+    }
+    else
+    {
+        return INT_MIN;
+    }
+}
+int performReturnAggregation(int returnValue, int currVal, int count)
+{
+    if (parsedQuery.groupByReturnAggregateFunction == MIN)
+    {
+        if( returnValue == 0 ){ return currVal; }
+        return min(returnValue, currVal);
+    }
+    else if (parsedQuery.groupByReturnAggregateFunction == MAX)
+    {
+        return max(returnValue, currVal);
+    }
+    else if (parsedQuery.groupByReturnAggregateFunction == SUM)
+    {
+        return returnValue + currVal;
+    }
+    else if (parsedQuery.groupByReturnAggregateFunction == COUNT)
+    {
+        return count;
+    }
+    else if (parsedQuery.groupByReturnAggregateFunction == AVG)
+    {
+        return ((double)(returnValue * (count - 1) + currVal)) / (double)count;
+    }
+    else
+    {
+        return INT_MIN;
+    }
+}
 void executeGROUPBY()
 {
+
     logger.log("executeGROUPBY");
-    cout << "LETS EXECUTE GROUP BY " << endl;
+
+    cout << "LETS EXECUTE GROUP BY " << parsedQuery.groupByRelationName << endl;
 
     Table table1 = *(tableCatalogue.getTable(parsedQuery.groupByRelationName));
     vector<string> columns;
+
     columns.emplace_back(parsedQuery.groupingAttribute);
-    // fix this
-    // columns.emplace_back(parsedQuery.groupByReturnAggregateFunction + parsedQuery.groupByReturnAttribute);
+    columns.emplace_back(parsedQuery.groupByResultRelationAttribute);
+
+    printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.groupByResultRelationName, columns);
-    unordered_map<int,vector<int>> hashMap;
+    vector<int> resultantRow;
+    resultantRow.reserve(resultantTable->columnCount);
+
+    int groupingAttributeIndex = table1.attributeIndexMap[parsedQuery.groupingAttribute];
+    int conditionAttributeIndex = table1.attributeIndexMap[parsedQuery.groupByConditionAttribute];
+    int resultAttributeIndex = table1.attributeIndexMap[parsedQuery.groupByReturnAttribute];
 
     Cursor cursor1 = table1.getCursor();
     vector<int> R_pointer = cursor1.getNext("table");
+    int groupingAttributeVal = R_pointer[groupingAttributeIndex];
 
-    int groupingAttributeIndex = table1.attributeIndexMap[ parsedQuery.groupingAttribute];
-    int resultAttributeIndex = table1.attributeIndexMap[ parsedQuery.groupByReturnAttribute];
+    double conditionValue = 0;
+    double returnValue = 0;
+    int count = 1;
 
-    while( !R_pointer.empty() ){
-        if ( hashMap.find(R_pointer[groupingAttributeIndex]) != hashMap.end() ){
-            //exits
-            hashMap[R_pointer[groupingAttributeIndex]].push_back(R_pointer[resultAttributeIndex]);
-        }else{
-            hashMap.insert({ R_pointer[groupingAttributeIndex] , {R_pointer[resultAttributeIndex]}});
+    while (!R_pointer.empty())
+    {
+        if (R_pointer[groupingAttributeIndex] != groupingAttributeVal)
+        {
+
+            // check threshold  condition
+            if (evaluateBinOp(conditionValue, parsedQuery.groupByAggregateThreshold, parsedQuery.groupByBinaryOperator)){
+                // form the result row
+                // first goes the grouping attribute
+                resultantRow.emplace_back(groupingAttributeVal);
+                // inserting return value
+                resultantRow.emplace_back(returnValue);
+
+                // write the row
+                cout << "res row ";
+                printVectorInt(resultantRow);
+                resultantTable->writeRow<int>(resultantRow);
+                resultantRow.clear();
+            }
+            // reset the values
+            count = 1;
+            conditionValue = 0;
+            returnValue = 0;
+            groupingAttributeVal = R_pointer[groupingAttributeIndex];
+
+            // consider the current value and finding the condition value and return value
+            conditionValue = performConditionAggregation(conditionValue, R_pointer[conditionAttributeIndex], count);
+            returnValue = performReturnAggregation(returnValue, R_pointer[resultAttributeIndex], count);
+            count++;
+        }
+        else
+        {
+            conditionValue = performConditionAggregation(conditionValue, R_pointer[conditionAttributeIndex], count);
+            returnValue = performReturnAggregation(returnValue, R_pointer[resultAttributeIndex], count);
+            count++;
         }
         R_pointer = cursor1.getNext("table");
     }
-    for (const auto& pair : hashMap) {
-        int key = pair.first;
-        const vector<int>& values = pair.second;
-
-        std::cout << "Key: " << key << ", Values: [";
-        for (int value : values) {
-            std::cout << value << ", ";
-        }
-        cout << " ] " << endl;
+    // create row for the last grouping attribute value
+    if (evaluateBinOp(conditionValue, parsedQuery.groupByAggregateThreshold, parsedQuery.groupByBinaryOperator)){
+        // form the result row
+        // inserting grouping attribute value
+        resultantRow.emplace_back(groupingAttributeVal);
+        // inserting the return attribute value
+        resultantRow.emplace_back(returnValue);
         
+        // write the row
+        cout << "res row ";
+        printVectorInt(resultantRow);
+        resultantTable->writeRow<int>(resultantRow);
+        resultantRow.clear();
     }
     
-
+    resultantTable->blockify();
+    tableCatalogue.insertTable(resultantTable);
     return;
 }

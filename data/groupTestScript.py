@@ -17,7 +17,7 @@ for i in range(1, num_rows + 1):
 data.sort(key=lambda x: x[1])
 
 # Write the sorted data to the CSV file
-with open('EMPLOYEEGROUP.csv', 'w', newline='') as file:
+with open('EMPLOYEEGROUP1.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     
     # Write the header row
@@ -27,4 +27,4 @@ with open('EMPLOYEEGROUP.csv', 'w', newline='') as file:
     for row in data:
         writer.writerow(row)
 
-print(f"CSV file 'random_data_sorted.csv' has been generated with {num_rows} random rows sorted by Department_ID.")
+print(f"CSV file 'EMPLOYEEGROUP1.csv' has been generated with {num_rows} random rows sorted by Department_ID.")

@@ -156,6 +156,7 @@ public:
     unsigned int groupByAggregateThreshold;
     AggregateFunction groupByReturnAggregateFunction;
     string groupByReturnAttribute = "";
+    string groupByResultRelationAttribute = "";
 
 
     ParsedQuery();
