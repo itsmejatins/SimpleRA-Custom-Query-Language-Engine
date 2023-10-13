@@ -164,6 +164,7 @@ bool syntacticParseGROUPBY()
 
     string aggregateReturnFunc = ctq[ctq.size() - 1].substr(0, 3);
     parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(4, ctq[ctq.size() - 1].size() - 5);
+    parsedQuery.groupByResultRelationAttribute = aggregateReturnFunc + parsedQuery.groupByReturnAttribute;
 
     if (aggregateReturnFunc == "MIN")
     {
@@ -183,6 +184,7 @@ bool syntacticParseGROUPBY()
         if(aggregateReturnFuncFULL == "COUNT"){
             parsedQuery.groupByReturnAggregateFunction = COUNT;
             parsedQuery.groupByReturnAttribute = ctq[ctq.size() - 1].substr(6, ctq[ctq.size() - 1].size() - 7);
+            parsedQuery.groupByResultRelationAttribute = aggregateReturnFuncFULL + parsedQuery.groupByReturnAttribute;
         }
         else{
             cout << "SYNTAX ERROR "<< endl;
@@ -200,7 +202,7 @@ bool syntacticParseGROUPBY()
     }
     
 
-    parsedQuery.groupByResultRelationAttribute = aggregateReturnFunc + parsedQuery.groupByReturnAttribute;
+    
     cout << "parameters initialized " << endl;
     return true;
 }
@@ -372,7 +374,6 @@ void executeGROUPBY()
         resultantTable->writeRow<int>(resultantRow);
         resultantRow.clear();
     }
-    
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
     return;

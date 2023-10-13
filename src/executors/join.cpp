@@ -1,8 +1,5 @@
 #include "global.h"
 
-bool evaulateJOINCondition(const vector<int> &R_pointer, const vector<int> &S_pointer, int firstColIndex, int secondColIndex,
-                      int binaryOperator);
-
 /**
  * @brief 
  * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2
@@ -144,36 +141,36 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
 
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();
+    Cursor S_marker_cursor = table2.getCursor();
 
     vector<int> R_pointer = cursor1.getNext("table");
     vector<int> S_pointer;
-    vector<int> S_marker;
+    vector<int> S_marker_row;
 
     int firstColIndex = table1.attributeIndexMap[parsedQuery.joinFirstColumnName];
     int secondColIndex = table2.attributeIndexMap[parsedQuery.joinSecondColumnName];
-    cout << parsedQuery.joinFirstColumnName << " " <<
-        parsedQuery.joinSecondColumnName << " "<<
-        firstColIndex << " " <<
-        secondColIndex << " " << endl;
+
 
     vector<int> resultantRow;
     resultantRow.reserve(resultantTable->columnCount);
 
     while( !R_pointer.empty() ){
-        cursor2 = table2.getCursor();
-        S_pointer = cursor2.getNext("table");
+        cursor2 = S_marker_cursor;
+        S_pointer = cursor2.getNext(("table"));
         while(evaulateLESSTHANJOINCondition(R_pointer, S_pointer, firstColIndex, secondColIndex)) {
+            S_marker_cursor = cursor2;
             S_pointer = cursor2.getNext(("table"));
         }
         while( !S_pointer.empty() ){
             resultantRow = R_pointer;
             resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
             // cout<< "res row " ;
-            // printVectorInt(resultantRow);
+             printVectorInt(resultantRow);
             resultantTable->writeRow(resultantRow);
             S_pointer = cursor2.getNext("table");
         }
         R_pointer = cursor1.getNext(("table"));
+
 
     }
     resultantTable->blockify();
