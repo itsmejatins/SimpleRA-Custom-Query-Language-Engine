@@ -9,12 +9,12 @@ data = []
 
 for i in range(1, num_rows + 1):
     employee_id = i
-    department_id = random.randint(1, 9)  # Random department ID between 1 and 4
+    department_id = random.randint(1, 20)  # Random department ID between 1 and 4
     salary = random.randint(20000, 100000)  # Random salary between 20,000 and 100,000
     data.append([employee_id, department_id, salary])
 
 # Sort the data by Department_ID
-data.sort(key=lambda x: x[1])
+# data.sort(key=lambda x: x[1])
 
 # Write the sorted data to the CSV file
 with open('EMPLOYEEGROUP1.csv', 'w', newline='') as file:

@@ -4,12 +4,14 @@
  * @brief 
  * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2
  */
-
+void sortByjoinAttribute();
+void removeJOINTemporaryTables();
 
 bool syntacticParseJOIN()
 {
     logger.log("syntacticParseJOIN");
 //    printVectorInt(tokenizedQuery);
+    sortByjoinAttribute();
     if (tokenizedQuery.size() != 9 || tokenizedQuery[5] != "ON")
     {
         cout << "SYNTAX ERROR" << endl;
@@ -17,8 +19,8 @@ bool syntacticParseJOIN()
     }
     parsedQuery.queryType = JOIN;
     parsedQuery.joinResultRelationName = tokenizedQuery[0];
-    parsedQuery.joinFirstRelationName = tokenizedQuery[3];
-    parsedQuery.joinSecondRelationName = tokenizedQuery[4];
+    parsedQuery.joinFirstRelationName = tokenizedQuery[3]+"_sorted";
+    parsedQuery.joinSecondRelationName = tokenizedQuery[4]+"_sorted";
     parsedQuery.joinFirstColumnName = tokenizedQuery[6];
     parsedQuery.joinSecondColumnName = tokenizedQuery[8];
 
@@ -128,8 +130,20 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
             cursor2 = S_marker_cursor;
         }
     }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        for(int i=0;i<resultantTable->columnCount;i++){
+            resultantRow.emplace_back(INT_MIN);
+        }
+        resultantTable->writeRow<int>(resultantRow);
+    }
+
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+
+    string deleteFileName = resultantTable->sourceFileName;
+    remove(&deleteFileName[0]);
     return;
 }
 
@@ -137,7 +151,8 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
 
     printVectorString(columns);
 
-    Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
+    Table *resultantTable = new Table(parsedQuery.joinResultRelationName,columns);
+    resultantTable->columns=columns;
 
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();
@@ -170,11 +185,30 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
             S_pointer = cursor2.getNext("table");
         }
         R_pointer = cursor1.getNext(("table"));
-
-
     }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        for(int i=0;i<resultantTable->columnCount;i++){
+            resultantRow.emplace_back(INT_MIN);
+        }
+        resultantTable->writeRow<int>(resultantRow);
+    }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        for(int i=0;i<resultantTable->columnCount;i++){
+            resultantRow.emplace_back(INT_MIN);
+        }
+        resultantTable->writeRow<int>(resultantRow);
+    }
+
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+
+    string deleteFileName = resultantTable->sourceFileName;
+    remove(&deleteFileName[0]);
+
     return;
 }
 
@@ -201,7 +235,7 @@ void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string>
         cursor2 = table2.getCursor();
         S_pointer = cursor2.getNext("table");
         while( !S_pointer.empty() ){
-            if(evaulateLESSTHANJOINCondition(R_pointer,S_pointer,firstColIndex,secondColIndex)) break;
+            if(evaulateGREATERTHANJOINCondition(R_pointer,S_pointer,firstColIndex,secondColIndex)) break;
             resultantRow = R_pointer;
             resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
             // cout<< "res row " ;
@@ -212,8 +246,20 @@ void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string>
         R_pointer = cursor1.getNext(("table"));
 
     }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        for(int i=0;i<resultantTable->columnCount;i++){
+            resultantRow.emplace_back(INT_MIN);
+        }
+        resultantTable->writeRow<int>(resultantRow);
+    }
+
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+
+    string deleteFileName = resultantTable->sourceFileName;
+    remove(&deleteFileName[0]);
     return;
 }
 
@@ -249,15 +295,57 @@ void performNOTEQIJOIN(Table table1,Table table2, vector<string> &columns){
         }
         R_pointer = cursor1.getNext("table");
     }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        for(int i=0;i<resultantTable->columnCount;i++){
+            resultantRow.emplace_back(INT_MIN);
+        }
+        resultantTable->writeRow<int>(resultantRow);
+    }
+
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+
+    string deleteFileName = resultantTable->sourceFileName;
+    remove(&deleteFileName[0]);
     return;
 }
 
 
+void sortByjoinAttribute(){
+    //first sort both the relations by grouping attribute
+
+    //first relation
+    parsedQuery.orderByRelation = tokenizedQuery[3];
+    parsedQuery.orderByResultRelation = tokenizedQuery[3]+"_sorted";
+    parsedQuery.orderByCol = tokenizedQuery[6];
+    parsedQuery.orderByStrategy = "ASC";
+    parsedQuery.queryType = ORDER_BY;
+    
+    //execute order by
+    executeORDERBY();
+
+    parsedQuery.clear();
+
+    //second relation
+    parsedQuery.orderByRelation = tokenizedQuery[4];
+    parsedQuery.orderByResultRelation = tokenizedQuery[4]+"_sorted";
+    parsedQuery.orderByCol = tokenizedQuery[8];
+    parsedQuery.orderByStrategy = "ASC";
+    parsedQuery.queryType = ORDER_BY;
+    executeORDERBY();
+
+    //clear the parsedQuery
+    parsedQuery.clear();
+}
+
 void executeJOIN()
 {
     logger.log("executeJOIN");
+
+
+    
 
     Table table1 = *(tableCatalogue.getTable(parsedQuery.joinFirstRelationName));
     Table table2 = *(tableCatalogue.getTable(parsedQuery.joinSecondRelationName));
@@ -289,5 +377,19 @@ void executeJOIN()
     }else if( parsedQuery.joinBinaryOperator == NOT_EQUAL){
         performNOTEQIJOIN(table1,table2,columns);
     }
+
+    removeJOINTemporaryTables();
     return;
+}
+
+void removeJOINTemporaryTables(){
+    parsedQuery.queryType = CLEAR;
+    parsedQuery.clearRelationName = tokenizedQuery[3]+"_sorted";
+    executeCLEAR();
+    parsedQuery.clear();
+
+    parsedQuery.queryType = CLEAR;
+    parsedQuery.clearRelationName = tokenizedQuery[4]+"_sorted";
+    executeCLEAR();
+    parsedQuery.clear();
 }

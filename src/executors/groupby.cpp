@@ -1,7 +1,8 @@
 #include "global.h"
 #include <vector>
 #include <string>
-
+void sortByGroupingAttribute();
+void removeGROUPBYTemporaryTables();
 /**
  * @brief
  * SYNTAX: R <- GROUP BY grouping_attribute FROM relation_name HAVING aggregate(attribute) bin_op attribute_value RETURN aggregate_function(attribute)
@@ -56,6 +57,7 @@ bool isNumber(const std::string &s)
 bool syntacticParseGROUPBY()
 {
     logger.log("syntacticParseGROUPBY");
+    sortByGroupingAttribute();
     cout << "TOKENIZED QUERY " << endl;
     printVectorString(tokenizedQuery);
     vector<string> ctq; // condensedTokenizedQuery
@@ -96,7 +98,7 @@ bool syntacticParseGROUPBY()
     parsedQuery.queryType = GROUP;
     parsedQuery.groupByResultRelationName = tokenizedQuery[0];
     parsedQuery.groupingAttribute = tokenizedQuery[4];
-    parsedQuery.groupByRelationName = tokenizedQuery[6];
+    parsedQuery.groupByRelationName = tokenizedQuery[6]+"_sorted";
 
     // extracting aggregate(attribute)
     //  str.substr(startingIndex, length)
@@ -291,6 +293,23 @@ int performReturnAggregation(int returnValue, int currVal, int count)
         return INT_MIN;
     }
 }
+
+void sortByGroupingAttribute(){
+    //first sort both the relations by grouping attribute
+
+    //first relation
+    parsedQuery.orderByRelation = tokenizedQuery[6];
+    parsedQuery.orderByResultRelation = tokenizedQuery[6]+"_sorted";
+    parsedQuery.orderByCol = tokenizedQuery[4];
+    parsedQuery.orderByStrategy = "ASC";
+    parsedQuery.queryType = ORDER_BY;
+
+    //execute order by
+    executeORDERBY();
+
+    parsedQuery.clear();
+}
+
 void executeGROUPBY()
 {
 
@@ -374,7 +393,26 @@ void executeGROUPBY()
         resultantTable->writeRow<int>(resultantRow);
         resultantRow.clear();
     }
+
+    if ( resultantTable->rowCount == 0 ){
+        //result is empty
+        resultantRow.emplace_back(INT_MIN);
+        resultantRow.emplace_back(INT_MIN);
+        resultantTable->writeRow<int>(resultantRow);
+    }
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+    removeGROUPBYTemporaryTables();
+
+    string deleteFileName = resultantTable->sourceFileName;
+    remove(&deleteFileName[0]);
+
     return;
+}
+
+void removeGROUPBYTemporaryTables(){
+    parsedQuery.queryType = CLEAR;
+    parsedQuery.clearRelationName = tokenizedQuery[6]+"_sorted";
+    executeCLEAR();
+    parsedQuery.clear();
 }

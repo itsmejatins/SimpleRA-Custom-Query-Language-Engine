@@ -4,20 +4,20 @@ import random
 
 # Generate Table 1
 table1 = pd.DataFrame({
-    'ID1': np.random.randint(1,100,100),
-    'Attribute1': np.random.randint(1, 100, 100),
-    'Attribute2': np.random.randint(1, 100, 100)
+    'ID1': np.random.randint(1,100,10),
+    'Attribute1': np.random.randint(1, 100, 10),
+    'Attribute2': np.random.randint(1, 100, 10)
 })
 
 # Generate Table 2
 table2 = pd.DataFrame({
-    'ID2': np.random.randint(1,100,100),
-    'Attribute3': np.random.randint(1, 100, 100),
-    'Attribute4': np.random.randint(1, 100, 100)
+    'ID2': np.random.randint(101,200,10),
+    'Attribute3': np.random.randint(101, 200, 10),
+    'Attribute4': np.random.randint(1, 100, 10)
 })
 
-table1 = table1.sort_values(by='ID1')
-table2 = table2.sort_values(by='ID2')
+# table1 = table1.sort_values(by='ID1')
+# table2 = table2.sort_values(by='ID2')
 
 # Save tables to CSV files
 table1.to_csv('TABLE1.csv', index=False)
@@ -28,8 +28,8 @@ table2.to_csv('TABLE2.csv', index=False)
 table1 = pd.read_csv('table1.csv')
 table2 = pd.read_csv('table2.csv')
 
-table1 = table1.sort_values(by='ID1')
-table2 = table2.sort_values(by='ID2')
+# table1 = table1.sort_values(by='ID1')
+# table2 = table2.sort_values(by='ID2')
 
 # Perform joins
 result = pd.merge(table1, table2, left_on='ID1', right_on='ID2', how='inner', suffixes=('_table1','_table2'))  # Inner join
