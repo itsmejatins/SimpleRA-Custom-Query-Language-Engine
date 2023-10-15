@@ -226,9 +226,6 @@ bool semanticParseGROUPBY()
         !tableCatalogue.isColumnFromTable(parsedQuery.groupByConditionAttribute, parsedQuery.groupByRelationName) ||
         !tableCatalogue.isColumnFromTable(parsedQuery.groupByReturnAttribute, parsedQuery.groupByRelationName))
     {
-        cout << parsedQuery.groupingAttribute << endl;
-        cout << parsedQuery.groupByConditionAttribute << endl;
-        cout << parsedQuery.groupByReturnAttribute << endl;
         cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
         return false;
     }
@@ -334,6 +331,7 @@ void executeGROUPBY()
     double conditionValue = 0;
     double returnValue = 0;
     int count = 1;
+    bool isEmpty = true;
 
     while (!R_pointer.empty())
     {
@@ -347,6 +345,7 @@ void executeGROUPBY()
                 resultantRow.emplace_back(groupingAttributeVal);
                 // inserting return value
                 resultantRow.emplace_back(returnValue);
+                isEmpty = false;
 
                 // write the row
                 resultantTable->writeRow<int>(resultantRow);
@@ -378,13 +377,14 @@ void executeGROUPBY()
         resultantRow.emplace_back(groupingAttributeVal);
         // inserting the return attribute value
         resultantRow.emplace_back(returnValue);
+        isEmpty = false;
         
         // write the row
         resultantTable->writeRow<int>(resultantRow);
         resultantRow.clear();
     }
 
-    if ( resultantTable->rowCount == 0 ){
+    if ( isEmpty ){
         //result is empty
         resultantRow.emplace_back(INT_MIN);
         resultantRow.emplace_back(INT_MIN);
@@ -392,6 +392,7 @@ void executeGROUPBY()
     }
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+    
     removeGROUPBYTemporaryTables();
 
     string deleteFileName = resultantTable->sourceFileName;
