@@ -1,6 +1,11 @@
 #include "global.h"
+#include <iostream>
+#include <climits>
 #include <vector>
 #include <string>
+
+using namespace std;
+
 void sortByGroupingAttribute();
 void removeGROUPBYTemporaryTables();
 /**

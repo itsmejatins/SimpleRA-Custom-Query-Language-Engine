@@ -1,5 +1,7 @@
 #include "global.h"
 
+
+
 /**
  * @brief
  * SYNTAX: CLEAR <relation_name>

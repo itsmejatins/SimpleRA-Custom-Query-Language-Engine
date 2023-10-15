@@ -1,5 +1,5 @@
 #include "global.h"
-
+#include <climits>
 /**
  * @brief 
  * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2

@@ -15,6 +15,7 @@ void printVector(vector<string> stringVector){
     }
     cout << " ] ";
 }
+
 bool syntacticParseSORT(){
     logger.log("syntacticParseSORT");
     printVector(tokenizedQuery);

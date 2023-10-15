@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <algorithm>
+#include <math.h>
 /**
  * @brief Construct a new Table:: Table object
  *

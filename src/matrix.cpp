@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <algorithm>
 
 /**
  * @brief Construct a new Matrix:: Matrix object
