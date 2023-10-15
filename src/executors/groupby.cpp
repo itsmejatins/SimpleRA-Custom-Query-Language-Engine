@@ -63,8 +63,6 @@ bool syntacticParseGROUPBY()
 {
     logger.log("syntacticParseGROUPBY");
     sortByGroupingAttribute();
-    cout << "TOKENIZED QUERY " << endl;
-    printVectorString(tokenizedQuery);
     vector<string> ctq; // condensedTokenizedQuery
 
     if (isNumber(tokenizedQuery.at(tokenizedQuery.size() - 1)))
@@ -110,7 +108,6 @@ bool syntacticParseGROUPBY()
     string aggregateCondFunc = tokenizedQuery[8].substr(0, 3);
     parsedQuery.groupByConditionAttribute = tokenizedQuery[8].substr(4, tokenizedQuery[8].size() - 5);
 
-    cout << "aggregateCondFunc " << aggregateCondFunc << endl;
     if (aggregateCondFunc == "MIN")
     {
         parsedQuery.groupByConditionAggregateFunction = MIN;
@@ -126,7 +123,6 @@ bool syntacticParseGROUPBY()
     else if (aggregateCondFunc == "COU")
     {
         string aggregateCondFuncFULL = tokenizedQuery[8].substr(0, 5);
-        cout << "aggregateCondFuncFULL " << aggregateCondFuncFULL << endl;
         if(aggregateCondFuncFULL == "COUNT"){
             parsedQuery.groupByConditionAggregateFunction = COUNT;
             parsedQuery.groupByConditionAttribute = tokenizedQuery[8].substr(6, tokenizedQuery[8].size() - 7);
@@ -208,9 +204,6 @@ bool syntacticParseGROUPBY()
         return false;
     }
     
-
-    
-    cout << "parameters initialized " << endl;
     return true;
 }
 
@@ -320,15 +313,11 @@ void executeGROUPBY()
 
     logger.log("executeGROUPBY");
 
-    cout << "LETS EXECUTE GROUP BY " << parsedQuery.groupByRelationName << endl;
-
     Table table1 = *(tableCatalogue.getTable(parsedQuery.groupByRelationName));
     vector<string> columns;
 
     columns.emplace_back(parsedQuery.groupingAttribute);
     columns.emplace_back(parsedQuery.groupByResultRelationAttribute);
-
-    printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.groupByResultRelationName, columns);
     vector<int> resultantRow;
@@ -360,8 +349,6 @@ void executeGROUPBY()
                 resultantRow.emplace_back(returnValue);
 
                 // write the row
-                cout << "res row ";
-                printVectorInt(resultantRow);
                 resultantTable->writeRow<int>(resultantRow);
                 resultantRow.clear();
             }
@@ -393,8 +380,6 @@ void executeGROUPBY()
         resultantRow.emplace_back(returnValue);
         
         // write the row
-        cout << "res row ";
-        printVectorInt(resultantRow);
         resultantTable->writeRow<int>(resultantRow);
         resultantRow.clear();
     }
