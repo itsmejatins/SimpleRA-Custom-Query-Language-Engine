@@ -88,7 +88,7 @@ bool evaulateGREATERTHANJOINCondition(const vector<int> &R_pointer, const vector
 
 void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorString(columns);
+    // printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
     resultantTable->columns=columns;
@@ -121,7 +121,7 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
             while( !R_pointer.empty() && !S_pointer.empty() && R_pointer[firstColIndex] == S_pointer[secondColIndex] ){
                 resultantRow = R_pointer;
                 resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-                 printVectorInt(resultantRow);
+                 // printVectorInt(resultantRow);
                 resultantTable->writeRow(resultantRow);
                 S_pointer = cursor2.getNext("table");
             }
@@ -142,7 +142,6 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
-    cout << "hello " << endl;
 
     string deleteFileName = resultantTable->sourceFileName;
     remove(&deleteFileName[0]);
@@ -151,7 +150,7 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
 void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorString(columns);
+    // printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName,columns);
     resultantTable->columns=columns;
@@ -182,7 +181,7 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
             resultantRow = R_pointer;
             resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
             // cout<< "res row " ;
-             printVectorInt(resultantRow);
+             // printVectorInt(resultantRow);
             resultantTable->writeRow(resultantRow);
             S_pointer = cursor2.getNext("table");
         }
@@ -216,7 +215,7 @@ void performLESSTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &c
 
 void performGREATERTHANCONDITIONALJOIN(Table table1,Table table2, vector<string> &columns){
 
-    printVectorString(columns);
+    // printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
 
@@ -345,9 +344,6 @@ void sortByjoinAttribute(){
 void executeJOIN()
 {
     logger.log("executeJOIN");
-
-
-    
 
     Table table1 = *(tableCatalogue.getTable(parsedQuery.joinFirstRelationName));
     Table table2 = *(tableCatalogue.getTable(parsedQuery.joinSecondRelationName));

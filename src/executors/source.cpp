@@ -58,7 +58,6 @@ void executeSOURCE()
     regex delim("[^\\s,]+");
     for (const std::string& storedLine : lines) {
 
-        cout << "\n> ";
         tokenizedQuery.clear();
         parsedQuery.clear();
         // logger.log("\nReading New Command: ");
