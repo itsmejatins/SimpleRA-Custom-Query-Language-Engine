@@ -1,7 +1,7 @@
 #include "global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: CLEAR <relation_name>
  * SYNTAX: CLEAR MATRIX <relation_name>
  */

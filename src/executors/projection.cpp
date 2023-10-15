@@ -1,6 +1,6 @@
 #include "global.h"
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- PROJECT column_name1, ... FROM relation_name
  */
 bool syntacticParsePROJECTION()

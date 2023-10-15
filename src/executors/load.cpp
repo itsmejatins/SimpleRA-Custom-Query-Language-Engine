@@ -78,7 +78,7 @@ void executeLOAD()
 
 void executeLOADMATRIX()
 {
-    logger.log("executeLOAD");
+    logger.log("executeLOADMATRIX");
 
     Matrix *matrix = new Matrix(parsedQuery.loadRelationName);
 
@@ -93,4 +93,9 @@ void executeLOADMATRIX()
         matrixCatalogue.insertMatrix(matrix);
         cout << "Loaded Matrix. Column Count: " << matrix->columnCount << " Row Count: " << matrix->rowCount << endl;
     }
+
+    cout << endl;
+    cout << "Number of blocks read: " << 0 << endl;
+    cout << "Number of blocks written: " << matrix->blockCount << endl;
+    cout << "Number of blocks accessed: " <<  matrix->blockCount << endl;
 }

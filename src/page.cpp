@@ -23,7 +23,7 @@ Page::Page()
  * of integers).
  *
  * @param relationName
- * @param pageIndex 
+ * @param pageIndex
  */
 Page::Page(string relationName, int pageIndex)
 {
@@ -66,9 +66,9 @@ Page::Page(string relationName, int pageIndex)
 
 /**
  * @brief Get row from page indexed by rowIndex
- * 
- * @param rowIndex 
- * @return vector<int> 
+ *
+ * @param rowIndex
+ * @return vector<int>
  */
 vector<int> Page::getRow(int rowIndex)
 {
@@ -93,7 +93,7 @@ Page::Page(string relationName, int pageIndex, vector<vector<int>> rows, int row
 
 /**
  * @brief writes current page contents to file.
- * 
+ *
  */
 void Page::writePage()
 {

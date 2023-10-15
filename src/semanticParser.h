@@ -23,3 +23,7 @@ bool semanticParseLOADMATRIX();
 bool semanticParsePRINTMATRIX();
 bool semanticParseEXPORTMATRIX();
 bool semanticParseRENAMEMATRIX();
+
+bool semanticParseTRANSPOSEMATRIX();
+bool semanticParseCOMPUTEMATRIX();
+bool semanticParseCHECKSYMMETRY();

@@ -64,4 +64,9 @@ void executeEXPORTMATRIX()
     logger.log("executeEXPORTMATRIX");
     Matrix* matrix = matrixCatalogue.getMatrix(parsedQuery.exportRelationName);
     matrix->makePermanent();
+
+    cout << endl;
+    cout << "Number of blocks read: " << matrix->blockCount << endl;
+    cout << "Number of blocks written: " << 0 << endl;
+    cout << "Number of blocks accessed: " <<  matrix->blockCount << endl;
 }

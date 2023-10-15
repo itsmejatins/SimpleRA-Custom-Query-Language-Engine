@@ -23,6 +23,14 @@ bool syntacticParse()
 
         else if (possibleQueryType == "RENAME")
             return syntacticParseRENAMEMATRIX();
+
+        else if(possibleQueryType == "TRANSPOSE")
+            return syntacticParseTRANSPOSEMATRIX();
+        else
+        {
+            cout << "SYNTAX ERROR" << endl;
+            return false;
+        }
     }
 
     if (tokenizedQuery.size() < 2)
@@ -47,6 +55,10 @@ bool syntacticParse()
         return syntacticParseEXPORT();
     else if(possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
+    else if(possibleQueryType == "COMPUTE")
+        return syntacticParseCOMPUTEMATRIX();
+    else if( possibleQueryType == "CHECKSYMMETRY")
+        return syntacticParseCHECKSYMMETRY();
     else
     {
         string resultantRelationName = possibleQueryType;
@@ -140,8 +152,8 @@ void ParsedQuery::clear()
  * invoked.
  *
  * @param relationName
- * @return true 
- * @return false 
+ * @return true
+ * @return false
  */
 bool isFileExists(string relationName)
 {
@@ -150,13 +162,18 @@ bool isFileExists(string relationName)
     return (stat(fileName.c_str(), &buffer) == 0);
 }
 
+bool isFileExistsAnywhere(const std::string& filePath) {
+    std::ifstream file(filePath);
+    return file.good();
+}
+
 /**
  * @brief Checks to see if source file exists. Called when SOURCE command is
  * invoked.
  *
  * @param relationName
- * @return true 
- * @return false 
+ * @return true
+ * @return false
  */
 bool isQueryFile(string relationName){
     relationName = "../data/" + relationName + ".ra";

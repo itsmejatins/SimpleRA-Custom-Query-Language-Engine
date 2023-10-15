@@ -1,3 +1,7 @@
+//
+// Created by System Administrator on 01/09/23.
+//
+
 #include "global.h"
 
 void MatrixCatalogue::insertMatrix(Matrix *matrix)
@@ -45,8 +49,11 @@ void MatrixCatalogue::print()
 
 MatrixCatalogue::~MatrixCatalogue(){
     logger.log("MatrixCatalogue::~MatrixCatalogue");
-    for(auto matrix: this->matrices){
-        matrix.second->unload();
-        delete matrix.second;
+    if(!this->matrices.empty())
+    {
+        for(auto matrix: this->matrices){
+            matrix.second->unload();
+            delete matrix.second;
+        }
     }
 }
