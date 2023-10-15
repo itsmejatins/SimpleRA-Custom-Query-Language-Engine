@@ -90,7 +90,6 @@ void executeSOURCE()
 
         logger.log("doCommand");
         if (syntacticParse() && semanticParse()){
-            cout<<"executing " << command << endl;
             executeCommand();
         }
     }

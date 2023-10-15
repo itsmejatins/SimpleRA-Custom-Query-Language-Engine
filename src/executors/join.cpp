@@ -121,7 +121,6 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
             while( !R_pointer.empty() && !S_pointer.empty() && R_pointer[firstColIndex] == S_pointer[secondColIndex] ){
                 resultantRow = R_pointer;
                 resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-                 cout<< "res row " ;
                  printVectorInt(resultantRow);
                 resultantTable->writeRow(resultantRow);
                 S_pointer = cursor2.getNext("table");
