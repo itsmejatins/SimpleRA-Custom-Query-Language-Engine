@@ -5,3 +5,4 @@ src/.idea
 src/log
 src/server
 src/.vscode
+executors/*.o
