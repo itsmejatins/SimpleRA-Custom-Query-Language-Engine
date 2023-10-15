@@ -91,6 +91,7 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
     printVectorString(columns);
 
     Table *resultantTable = new Table(parsedQuery.joinResultRelationName, columns);
+    resultantTable->columns=columns;
 
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();
@@ -120,15 +121,16 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
             while( !R_pointer.empty() && !S_pointer.empty() && R_pointer[firstColIndex] == S_pointer[secondColIndex] ){
                 resultantRow = R_pointer;
                 resultantRow.insert(resultantRow.end(),S_pointer.begin(),S_pointer.end());
-                // cout<< "res row " ;
-                // printVectorInt(resultantRow);
+                 cout<< "res row " ;
+                 printVectorInt(resultantRow);
                 resultantTable->writeRow(resultantRow);
                 S_pointer = cursor2.getNext("table");
             }
-            R_pointer = cursor1.getNext("table");
+
             S_pointer = S_marker_row;
             cursor2 = S_marker_cursor;
         }
+        R_pointer = cursor1.getNext("table");
     }
 
     if ( resultantTable->rowCount == 0 ){
@@ -141,6 +143,7 @@ void performEQUIJOIN(Table table1,Table table2, vector<string> &columns){
 
     resultantTable->blockify();
     tableCatalogue.insertTable(resultantTable);
+    cout << "hello " << endl;
 
     string deleteFileName = resultantTable->sourceFileName;
     remove(&deleteFileName[0]);
