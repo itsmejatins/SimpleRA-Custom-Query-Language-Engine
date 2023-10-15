@@ -59,6 +59,8 @@ bool syntacticParse()
         return syntacticParseCOMPUTEMATRIX();
     else if( possibleQueryType == "CHECKSYMMETRY")
         return syntacticParseCHECKSYMMETRY();
+    else if ( possibleQueryType == "SORT")
+        return syntacticParseSORT();
     else
     {
         string resultantRelationName = possibleQueryType;
@@ -80,6 +82,10 @@ bool syntacticParse()
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
+        else if (possibleQueryType == "ORDER")
+            return syntacticParseORDERBY();
+        else if( possibleQueryType == "GROUP")
+            return syntacticParseGROUPBY();
         else
         {
             cout << "SYNTAX ERROR" << endl;
@@ -145,6 +151,10 @@ void ParsedQuery::clear()
     this->sortRelationName = "";
 
     this->sourceFileName = "";
+
+
+    this->sortingStrategies.clear();
+    this->sortColumnNames.clear();
 }
 
 /**

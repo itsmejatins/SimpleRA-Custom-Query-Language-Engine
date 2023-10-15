@@ -9,6 +9,7 @@ bool semanticParse(){
         case EXPORT: return semanticParseEXPORT();
         case INDEX: return semanticParseINDEX();
         case JOIN: return semanticParseJOIN();
+        case GROUP: return semanticParseGROUPBY();
         case LIST: return semanticParseLIST();
         case LOAD: return semanticParseLOAD();
         case PRINT: return semanticParsePRINT();
@@ -17,6 +18,7 @@ bool semanticParse(){
         case SELECTION: return semanticParseSELECTION();
         case SORT: return semanticParseSORT();
         case SOURCE: return semanticParseSOURCE();
+        case ORDER_BY: return semanticParseORDERBY();
 
             // for matrix
         case CLEARMATRIX: return semanticParseCLEARMATRIX();

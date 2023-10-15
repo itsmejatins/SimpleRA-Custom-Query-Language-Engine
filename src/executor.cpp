@@ -9,6 +9,7 @@ void executeCommand(){
         case EXPORT: executeEXPORT(); break;
         case INDEX: executeINDEX(); break;
         case JOIN: executeJOIN(); break;
+        case GROUP: executeGROUPBY(); break;
         case LIST: executeLIST(); break;
         case LOAD: executeLOAD(); break;
         case PRINT: executePRINT(); break;
@@ -17,6 +18,7 @@ void executeCommand(){
         case SELECTION: executeSELECTION(); break;
         case SORT: executeSORT(); break;
         case SOURCE: executeSOURCE(); break;
+        case ORDER_BY: executeORDERBY(); break;
 
             // for matrix
         case CLEARMATRIX: executeCLEARMATRIX(); break;

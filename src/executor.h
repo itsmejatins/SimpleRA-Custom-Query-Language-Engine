@@ -8,6 +8,7 @@ void executeDISTINCT();
 void executeEXPORT();
 void executeINDEX();
 void executeJOIN();
+void executeGROUPBY();
 void executeLIST();
 void executeLOAD();
 void executePRINT();
@@ -16,6 +17,7 @@ void executeRENAME();
 void executeSELECTION();
 void executeSORT();
 void executeSOURCE();
+void executeORDERBY();
 
 // for matrix
 void executeCLEARMATRIX();
