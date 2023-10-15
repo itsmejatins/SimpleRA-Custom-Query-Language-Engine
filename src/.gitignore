@@ -6,3 +6,5 @@ src/log
 src/server
 src/.vscode
 executors/*.o
+log
+server
