@@ -79,7 +79,7 @@ bool evaulateLESSTHANJOINCondition(const vector<int> &R_pointer, const vector<in
 }
 
 bool evaulateGREATERTHANJOINCondition(const vector<int> &R_pointer, const vector<int> &S_pointer, int firstColIndex, int secondColIndex) {
-    if (parsedQuery.joinBinaryOperator == LESS_THAN) {
+    if (parsedQuery.joinBinaryOperator == GREATER_THAN) {
         return R_pointer[firstColIndex] <= S_pointer[secondColIndex];
     }else{
         return R_pointer[firstColIndex] < S_pointer[secondColIndex];
