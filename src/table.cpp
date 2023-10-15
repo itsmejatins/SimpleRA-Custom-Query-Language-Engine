@@ -414,7 +414,7 @@ bool compareTwoVectors(const vector<int>& a, const vector<int>& b) {
 void Table::initialRun()
 {
     logger.log("Table::initialRun");
-
+    sortColIndices.clear();
     for(string s : parsedQuery.sortColumnNames)
     {
         sortColIndices.push_back(this->attributeIndexMap[s]);
